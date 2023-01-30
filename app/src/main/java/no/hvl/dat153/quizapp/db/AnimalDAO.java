@@ -26,4 +26,9 @@ public class AnimalDAO {
         return new ArrayList<>(repo.keySet());
     }
 
+    public void addAnimal(String name, String URI) {
+        Animal animal = new Animal(name, URI);
+        repo.put(animal.getName(), animal);
+    }
+
 }
