@@ -18,6 +18,6 @@ public class DatabaseActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new AnimalAdapter(this));
+        recyclerView.setAdapter(new AnimalAdapter());
     }
 }
