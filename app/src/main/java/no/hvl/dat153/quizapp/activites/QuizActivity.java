@@ -20,7 +20,7 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        List<String> database = AnimalDAO.getAllNames();
+        List<String> database = AnimalDAO.get().getAllNames();
         Collections.shuffle(database);
 
         Button button1 = (Button) findViewById(R.id.button1);

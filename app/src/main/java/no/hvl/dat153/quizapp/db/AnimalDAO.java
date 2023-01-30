@@ -16,7 +16,7 @@ import no.hvl.dat153.quizapp.model.Animal;
 public class AnimalDAO {
 
     private static AnimalDAO animalDAO;
-    private static Map<String, Animal> repo = new HashMap<String, Animal>();
+    private Map<String, Animal> repo = new HashMap<String, Animal>();
 
     private AnimalDAO() throws URISyntaxException {
         Animal cat = new Animal("Cat", R.drawable.cat);
@@ -32,7 +32,7 @@ public class AnimalDAO {
      * Get all animals
      * @return
      */
-    public static List<Animal> getAllAnimals() {
+    public List<Animal> getAllAnimals() {
         return new ArrayList<>(repo.values());
     }
 
@@ -41,7 +41,7 @@ public class AnimalDAO {
      *
      * @return List of all anmal names
      */
-    public static List<String> getAllNames() {
+    public List<String> getAllNames() {
         return new ArrayList<>(repo.keySet());
     }
 
@@ -54,6 +54,15 @@ public class AnimalDAO {
     public void addAnimal(String name, int image_res_id) throws URISyntaxException {
         Animal animal = new Animal(name, image_res_id);
         repo.put(animal.getName(), animal);
+    }
+
+    /**
+     * Remove an animal from DB
+     *
+     * @param name name of animal to be deleted
+     */
+    public void removeAnimal(String name) {
+        repo.remove(name);
     }
 
     /**
