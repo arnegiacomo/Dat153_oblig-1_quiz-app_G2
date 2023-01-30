@@ -1,5 +1,6 @@
 package no.hvl.dat153.quizapp.activites;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -17,10 +18,13 @@ import java.util.TimerTask;
 import no.hvl.dat153.quizapp.R;
 import no.hvl.dat153.quizapp.db.AnimalDAO;
 import no.hvl.dat153.quizapp.model.Animal;
+import no.hvl.dat153.quizapp.util.Util;
 
 public class QuizActivity extends AppCompatActivity {
 
-    private AnimalDAO animalDAO = AnimalDAO.get();
+    private String difficulty;
+
+    private final AnimalDAO animalDAO = AnimalDAO.get();
 
     private int correctnameplace;
     private int index;
@@ -31,6 +35,9 @@ public class QuizActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
+
+        Intent intent = getIntent();
+        difficulty = intent.getStringExtra(Util.DIFFICULTY_MESSAGE);
 
         List<String> database = AnimalDAO.get().getAllNames();
         Collections.shuffle(database);
