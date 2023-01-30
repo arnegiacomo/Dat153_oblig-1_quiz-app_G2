@@ -13,7 +13,7 @@ import no.hvl.dat153.quizapp.model.Animal;
 public class AnimalDAO {
 
     private static AnimalDAO animalDAO;
-    private Map<String, Animal> repo = new HashMap<String, Animal>();
+    private static Map<String, Animal> repo = new HashMap<String, Animal>();
 
     private AnimalDAO() {
         Animal cat = new Animal("Cat", "res/images/cat.webp");
@@ -30,7 +30,7 @@ public class AnimalDAO {
      *
      * @return List of all anmal names
      */
-    public List<String> getAllNames() {
+    public static List<String> getAllNames() {
         return new ArrayList<>(repo.keySet());
     }
 
