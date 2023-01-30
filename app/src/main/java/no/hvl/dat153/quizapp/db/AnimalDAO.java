@@ -1,11 +1,9 @@
 package no.hvl.dat153.quizapp.db;
 
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import no.hvl.dat153.quizapp.R;
 import no.hvl.dat153.quizapp.model.Animal;
@@ -16,9 +14,12 @@ import no.hvl.dat153.quizapp.model.Animal;
 public class AnimalDAO {
 
     private static AnimalDAO animalDAO;
-    private Map<String, Animal> repo = new HashMap<String, Animal>();
+    private final Map<String, Animal> repo = new HashMap<>();
 
-    private AnimalDAO() throws URISyntaxException {
+    /**
+     * Populates the database
+     */
+    private AnimalDAO() {
         Animal cat = new Animal("Cat", R.drawable.cat);
         Animal dog = new Animal("Dog", R.drawable.dog);
         Animal giantAntEater = new Animal("Giant Ant Eater", R.drawable.anteater);
@@ -30,7 +31,7 @@ public class AnimalDAO {
 
     /**
      * Get all animals
-     * @return
+     * @return All animals
      */
     public List<Animal> getAllAnimals() {
         return new ArrayList<>(repo.values());
@@ -51,7 +52,7 @@ public class AnimalDAO {
      * @param name Animal name
      * @param image_res_id ID of image to animal
      */
-    public void addAnimal(String name, int image_res_id) throws URISyntaxException {
+    public void addAnimal(String name, int image_res_id) {
         Animal animal = new Animal(name, image_res_id);
         repo.put(animal.getName(), animal);
     }
@@ -71,13 +72,8 @@ public class AnimalDAO {
      * @return singleton instance
      */
     public static AnimalDAO get() {
-        if (animalDAO == null) {
-            try {
-                animalDAO = new AnimalDAO();
-            } catch (URISyntaxException e) {
-                e.printStackTrace();
-            }
-        }
+        if (animalDAO == null)
+            animalDAO = new AnimalDAO();
 
         return animalDAO;
     }
