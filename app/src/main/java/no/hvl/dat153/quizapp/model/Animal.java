@@ -6,11 +6,11 @@ package no.hvl.dat153.quizapp.model;
 public class Animal {
 
     private String name;
-    private String image;
+    private int image_res_id;
 
-    public Animal(String name, String image) {
+    public Animal(String name, int image_res_id) {
         this.name = name;
-        this.image = image;
+        this.image_res_id = image_res_id;
     }
 
     public String getName() {
@@ -21,11 +21,11 @@ public class Animal {
         this.name = name;
     }
 
-    public String getImage() {
-        return image;
+    public int getImage() {
+        return image_res_id;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setImage(int image_res_id) {
+        this.image_res_id = image_res_id;
     }
 }
