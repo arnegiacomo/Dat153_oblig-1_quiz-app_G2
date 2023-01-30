@@ -20,6 +20,7 @@ import no.hvl.dat153.quizapp.model.Animal;
 
 public class QuizActivity extends AppCompatActivity {
 
+    private AnimalDAO animalDAO = AnimalDAO.get();
 
     private int correctnameplace;
     private int index;
@@ -116,12 +117,12 @@ public class QuizActivity extends AppCompatActivity {
 
             Random random = new Random();
 
-            int size = AnimalDAO.getAllNames().size();
+            int size = animalDAO.getAllNames().size();
             index = random.nextInt(size);
-            Animal animal = AnimalDAO.getAllAnimals().get(index);
+            Animal animal = animalDAO.getAllAnimals().get(index);
 
 
-            imageView.setImageResource(animal.getImage());
+            imageView.setImageResource(animal.getImage_res_id());
 
             correctnameplace = random.nextInt(3);
             int option1=random.nextInt(size);
@@ -136,19 +137,19 @@ public class QuizActivity extends AppCompatActivity {
             }
 
             if (correctnameplace ==0){
-                button1.setText(AnimalDAO.getAllNames().get(index));
-                button2.setText(AnimalDAO.getAllNames().get(option1));
-                button3.setText(AnimalDAO.getAllNames().get(option2));
+                button1.setText(animalDAO.getAllNames().get(index));
+                button2.setText(animalDAO.getAllNames().get(option1));
+                button3.setText(animalDAO.getAllNames().get(option2));
             }
             else if (correctnameplace ==1){
-                button1.setText(AnimalDAO.getAllNames().get(option1));
-                button2.setText(AnimalDAO.getAllNames().get(index));
-                button3.setText(AnimalDAO.getAllNames().get(option2));
+                button1.setText(animalDAO.getAllNames().get(option1));
+                button2.setText(animalDAO.getAllNames().get(index));
+                button3.setText(animalDAO.getAllNames().get(option2));
             }
             else{
-                button1.setText(AnimalDAO.getAllNames().get(option1));
-                button2.setText(AnimalDAO.getAllNames().get(option2));
-                button3.setText(AnimalDAO.getAllNames().get(index));
+                button1.setText(animalDAO.getAllNames().get(option1));
+                button2.setText(animalDAO.getAllNames().get(option2));
+                button3.setText(animalDAO.getAllNames().get(index));
             }
 
         }
