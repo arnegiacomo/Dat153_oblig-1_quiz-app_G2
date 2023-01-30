@@ -14,7 +14,7 @@
             android:textSize="100px" />
 
         <CheckBox
-            android:id="@+id/checkBox"
+            android:id="@+id/markedfordelete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>

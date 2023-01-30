@@ -29,9 +29,9 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalView
     @Override
     public void onBindViewHolder(AnimalViewHolder holder, int position) {
         Animal animal = animalDAO.getAllAnimals().get(position);
+        holder.animal = animal;
         holder.textView.setText(animal.getName());
-
-        holder.imageView.setImageResource(animal.getImage());
+        holder.imageView.setImageResource(animal.getImage_res_id());
     }
 
     @Override
@@ -41,13 +41,23 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalView
 
     static class AnimalViewHolder extends RecyclerView.ViewHolder {
 
+        Animal animal;
         TextView textView;
         ImageView imageView;
+        View markfordelete;
 
         public AnimalViewHolder(View itemView) {
             super(itemView);
             textView = itemView.findViewById(R.id.text_view);
             imageView = itemView.findViewById(R.id.image_view);
+
+            markfordelete = itemView.findViewById(R.id.markedfordelete);
+
+            markfordelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    animal.setMarked_for_delete(true);                }
+            });
         }
     }
 }

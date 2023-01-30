@@ -1,31 +1,20 @@
 package no.hvl.dat153.quizapp.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+
 /**
  * Animal object with a name and image
  */
+@Data
 public class Animal {
 
+    @NonNull
     private String name;
-    private int image_res_id;
+    @NonNull
+    private Integer image_res_id;
+    private boolean marked_for_delete = false;
 
-    public Animal(String name, int image_res_id) {
-        this.name = name;
-        this.image_res_id = image_res_id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getImage() {
-        return image_res_id;
-    }
-
-    public void setImage(int image_res_id) {
-        this.image_res_id = image_res_id;
-    }
 }
