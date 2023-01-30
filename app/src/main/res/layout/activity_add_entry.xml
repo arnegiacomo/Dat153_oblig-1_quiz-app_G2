@@ -4,6 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddAnimalActivity">
+    tools:context=".activites.AddEntryActivity">
 
+    <Button
+        android:id="@+id/addentrybtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add to database"
+        tools:layout_editor_absoluteX="118dp"
+        tools:layout_editor_absoluteY="498dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
