@@ -1,8 +1,5 @@
 package no.hvl.dat153.quizapp.view;
 
-import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,11 +15,9 @@ import no.hvl.dat153.quizapp.model.Animal;
 public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalViewHolder> {
 
     private AnimalDAO animalDAO;
-    private Activity activity;
 
-    public AnimalAdapter(Activity activity) {
+    public AnimalAdapter() {
         this.animalDAO = AnimalDAO.get();
-        this.activity = activity;
     }
 
     @Override
