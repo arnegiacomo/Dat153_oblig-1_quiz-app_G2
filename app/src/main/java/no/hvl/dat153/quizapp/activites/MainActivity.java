@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        AnimalDAO dao = new AnimalDAO();
+        AnimalDAO dao = AnimalDAO.get();
         dao.getAllNames().forEach( name -> Log.println(Log.INFO, "test", name));
     }
 }
