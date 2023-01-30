@@ -1,8 +1,10 @@
-package no.hvl.dat153.quizapp;
+package no.hvl.dat153.quizapp.activites;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+
+import no.hvl.dat153.quizapp.R;
 
 public class MainActivity extends AppCompatActivity {
 
