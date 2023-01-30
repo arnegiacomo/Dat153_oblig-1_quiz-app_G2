@@ -1,10 +1,13 @@
 package no.hvl.dat153.quizapp.db;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import no.hvl.dat153.quizapp.R;
 import no.hvl.dat153.quizapp.model.Animal;
 
 /**
@@ -15,14 +18,22 @@ public class AnimalDAO {
     private static AnimalDAO animalDAO;
     private static Map<String, Animal> repo = new HashMap<String, Animal>();
 
-    private AnimalDAO() {
-        Animal cat = new Animal("Cat", "res/images/cat.webp");
-        Animal dog = new Animal("Dog", "res/images/dog.jpeg");
-        Animal giantAntEater = new Animal("Giant Ant Eater", "res/images/anteater.JPG");
+    private AnimalDAO() throws URISyntaxException {
+        Animal cat = new Animal("Cat", R.drawable.cat);
+        Animal dog = new Animal("Dog", R.drawable.dog);
+        Animal giantAntEater = new Animal("Giant Ant Eater", R.drawable.anteater);
 
         repo.put(cat.getName(), cat);
         repo.put(dog.getName(), dog);
         repo.put(giantAntEater.getName(), giantAntEater);
+    }
+
+    /**
+     * Get all animals
+     * @return
+     */
+    public static List<Animal> getAllAnimals() {
+        return new ArrayList<>(repo.values());
     }
 
     /**
@@ -38,10 +49,10 @@ public class AnimalDAO {
      * Add new animal to database
      *
      * @param name Animal name
-     * @param URI URI of image to animal
+     * @param image_res_id ID of image to animal
      */
-    public void addAnimal(String name, String URI) {
-        Animal animal = new Animal(name, URI);
+    public void addAnimal(String name, int image_res_id) throws URISyntaxException {
+        Animal animal = new Animal(name, image_res_id);
         repo.put(animal.getName(), animal);
     }
 
@@ -52,7 +63,11 @@ public class AnimalDAO {
      */
     public static AnimalDAO get() {
         if (animalDAO == null) {
-            animalDAO = new AnimalDAO();
+            try {
+                animalDAO = new AnimalDAO();
+            } catch (URISyntaxException e) {
+                e.printStackTrace();
+            }
         }
 
         return animalDAO;
