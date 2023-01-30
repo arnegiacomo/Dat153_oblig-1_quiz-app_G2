@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import no.hvl.dat153.quizapp.model.Animal;
 
+/**
+ * Data access object for our animal database
+ */
 public class AnimalDAO {
 
     private static AnimalDAO animalDAO;
@@ -23,15 +25,31 @@ public class AnimalDAO {
         repo.put(giantAntEater.getName(), giantAntEater);
     }
 
+    /**
+     * Get all animal names
+     *
+     * @return List of all anmal names
+     */
     public List<String> getAllNames() {
         return new ArrayList<>(repo.keySet());
     }
 
+    /**
+     * Add new animal to database
+     *
+     * @param name Animal name
+     * @param URI URI of image to animal
+     */
     public void addAnimal(String name, String URI) {
         Animal animal = new Animal(name, URI);
         repo.put(animal.getName(), animal);
     }
 
+    /**
+     * Singleton static access
+     *
+     * @return singleton instance
+     */
     public static AnimalDAO get() {
         if (animalDAO == null) {
             animalDAO = new AnimalDAO();

@@ -1,5 +1,8 @@
 package no.hvl.dat153.quizapp.model;
 
+/**
+ * Animal object with a name and image
+ */
 public class Animal {
 
     private String name;
