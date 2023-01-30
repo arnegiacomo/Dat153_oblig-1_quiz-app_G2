@@ -1,14 +1,16 @@
-package no.hvl.dat153.quizapp;
+package no.hvl.dat153.quizapp.activites;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
-public class AddAnimalActivity extends AppCompatActivity {
+import no.hvl.dat153.quizapp.R;
+
+public class AddEntryActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_animal);
+        setContentView(R.layout.activity_add_entry);
     }
 }

@@ -9,6 +9,7 @@ import android.view.View;
 
 import no.hvl.dat153.quizapp.R;
 import no.hvl.dat153.quizapp.db.AnimalDAO;
+import no.hvl.dat153.quizapp.util.Util;
 import no.hvl.dat153.quizapp.view.AnimalAdapter;
 
 public class DatabaseActivity extends AppCompatActivity {
@@ -26,23 +27,10 @@ public class DatabaseActivity extends AppCompatActivity {
         recyclerView.setAdapter(animalAdapter);
 
         View deletebtn = findViewById(R.id.deletebtn);
-
-        deletebtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateAdapter();
-
-            }
-        });
+        deletebtn.setOnClickListener(view -> updateAdapter());
 
         View addbtn = findViewById(R.id.addbtn);
-
-        addbtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
+        addbtn.setOnClickListener(view -> Util.startActivity(DatabaseActivity.this, AddEntryActivity.class));
     }
 
     /**
@@ -55,4 +43,5 @@ public class DatabaseActivity extends AppCompatActivity {
         });
         animalAdapter.notifyDataSetChanged();
     }
+
 }
