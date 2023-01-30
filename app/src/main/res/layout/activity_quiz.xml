@@ -7,7 +7,7 @@
     tools:context=".activites.QuizActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageViewQuiz"
         android:layout_width="378dp"
         android:layout_height="383dp"
         android:layout_marginTop="16dp"
@@ -17,36 +17,40 @@
         app:srcCompat="@drawable/cat" />
 
     <LinearLayout
-        android:layout_width="409dp"
-        android:layout_height="330dp"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
         android:layout_marginStart="1dp"
         android:layout_marginTop="1dp"
         android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginBottom="32dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView">
+        app:layout_constraintTop_toBottomOf="@+id/imageViewQuiz">
 
         <Button
             android:id="@+id/button1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#0000FF"
             android:text="Button" />
 
         <Button
             android:id="@+id/button2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#0000FF"
             android:text="Button" />
 
         <Button
             android:id="@+id/button3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="#0000FF"
             android:text="Button" />
     </LinearLayout>
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
