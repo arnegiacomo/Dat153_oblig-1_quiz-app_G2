@@ -53,11 +53,7 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalView
 
             markfordelete = itemView.findViewById(R.id.markedfordelete);
 
-            markfordelete.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    animal.setMarked_for_delete(true);                }
-            });
+            markfordelete.setOnClickListener(view -> animal.setMarked_for_delete(true));
         }
     }
 }
