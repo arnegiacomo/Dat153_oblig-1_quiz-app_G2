@@ -1,10 +1,14 @@
 package no.hvl.dat153.quizapp.activites;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,8 +19,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import no.hvl.dat153.quizapp.R;
 import no.hvl.dat153.quizapp.db.AnimalDAO;
@@ -101,38 +103,61 @@ public class QuizActivity extends AppCompatActivity {
             Button button2 = (Button) findViewById(R.id.button2);
             Button button3 = (Button) findViewById(R.id.button3);
 
-            if (correctnameplace==0){
-                button1.setBackgroundColor(Color.parseColor("#228B22"));
-                button2.setBackgroundColor(Color.parseColor("#FF0000"));
-                button3.setBackgroundColor(Color.parseColor("#FF0000"));
-            }
-            else if (correctnameplace==1){
-                button1.setBackgroundColor(Color.parseColor("#FF0000"));
-                button2.setBackgroundColor(Color.parseColor("#228B22"));
-                button3.setBackgroundColor(Color.parseColor("#FF0000"));
+            // Animation of the background color
+            View view =findViewById(R.id.QuizLayout);
+            int colorFrom = Color.WHITE;
+            int colorToCorrect = Color.GREEN;
+            int colorToFalse = Color.RED;
+            if (correctnameplace==buttonnumber){
+                ValueAnimator colorAnimationCorrect = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorToCorrect);
+                colorAnimationCorrect.setDuration(1000);
+                colorAnimationCorrect.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                            view.setBackgroundColor((int) animation.getAnimatedValue());
+                    }
+                });colorAnimationCorrect.start();
+
+                ValueAnimator colorAnimationBack = ValueAnimator.ofObject(new ArgbEvaluator(), colorToCorrect,colorFrom);
+                colorAnimationBack.setDuration(1000);
+                colorAnimationBack.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                        view.setBackgroundColor((int) animation.getAnimatedValue());
+                    }
+                });colorAnimationBack.start();
             }
             else{
-                button1.setBackgroundColor(Color.parseColor("#FF0000"));
-                button2.setBackgroundColor(Color.parseColor("#FF0000"));
-                button3.setBackgroundColor(Color.parseColor("#228B22"));
+                ValueAnimator colorAnimationFalse = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorToFalse);
+                colorAnimationFalse.setDuration(1000);
+                colorAnimationFalse.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                            view.setBackgroundColor((int) animation.getAnimatedValue());
+                    }
+                 });colorAnimationFalse.start();
+
+                 ValueAnimator colorAnimationBack = ValueAnimator.ofObject(new ArgbEvaluator(), colorToFalse,colorFrom);
+                colorAnimationBack.setDuration(1000);
+                colorAnimationBack.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                    @Override
+                    public void onAnimationUpdate(ValueAnimator animation) {
+                         view.setBackgroundColor((int) animation.getAnimatedValue());
+                    }
+                });colorAnimationBack.start();
             }
+
+            // Animation of the picture
+            Animation correctAnimation = AnimationUtils.loadAnimation(this, R.anim.correct_animation);
+            Animation incorrectAnimation = AnimationUtils.loadAnimation(this, R.anim.incorrect_animation);
+            ImageView image = findViewById(R.id.imageViewQuiz);
 
             if (buttonnumber==correctnameplace){
                 countercorrect++;
-            }
+                image.startAnimation(correctAnimation);
+            } else {image.startAnimation(incorrectAnimation);}
 
             counter++;
-
-            Timer timer = new Timer();
-            TimerTask task = new TimerTask() {
-                @Override
-                public void run() {
-                    button1.setBackgroundColor(Color.parseColor("#0000FF"));
-                    button2.setBackgroundColor(Color.parseColor("#0000FF"));
-                    button3.setBackgroundColor(Color.parseColor("#0000FF"));
-                }
-            };
-            timer.schedule(task, 2000);
 
         }
 
