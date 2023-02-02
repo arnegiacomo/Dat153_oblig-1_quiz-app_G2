@@ -51,9 +51,7 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalView
         });
         notifyDataSetChanged();
 
-        for (AnimalViewHolder holder : animalViewHolderList) {
-            holder.markfordelete.setChecked(false);
-        }
+        animalViewHolderList.forEach(holder -> holder.markfordelete.setChecked(false));
     }
 
     @Override
