@@ -1,9 +1,7 @@
 package no.hvl.dat153.quizapp.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 /**
  * Animal object with a name and image

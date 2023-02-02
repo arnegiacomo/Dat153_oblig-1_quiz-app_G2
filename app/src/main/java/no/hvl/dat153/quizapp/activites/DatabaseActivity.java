@@ -8,13 +8,12 @@ import android.os.Bundle;
 import android.view.View;
 
 import no.hvl.dat153.quizapp.R;
-import no.hvl.dat153.quizapp.db.AnimalDAO;
 import no.hvl.dat153.quizapp.util.Util;
 import no.hvl.dat153.quizapp.view.AnimalAdapter;
 
 public class DatabaseActivity extends AppCompatActivity {
 
-    private AnimalAdapter animalAdapter = new AnimalAdapter();
+    private final AnimalAdapter animalAdapter = new AnimalAdapter();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
