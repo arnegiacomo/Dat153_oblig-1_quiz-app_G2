@@ -14,7 +14,6 @@ import no.hvl.dat153.quizapp.view.AnimalAdapter;
 
 public class DatabaseActivity extends AppCompatActivity {
 
-    private AnimalDAO animalDAO = AnimalDAO.get();
     private AnimalAdapter animalAdapter = new AnimalAdapter();
 
     @Override
@@ -27,21 +26,9 @@ public class DatabaseActivity extends AppCompatActivity {
         recyclerView.setAdapter(animalAdapter);
 
         View deletebtn = findViewById(R.id.deletebtn);
-        deletebtn.setOnClickListener(view -> updateAdapter());
+        deletebtn.setOnClickListener(view -> animalAdapter.updateAdapter());
 
         View addbtn = findViewById(R.id.addbtn);
         addbtn.setOnClickListener(view -> Util.startActivity(DatabaseActivity.this, AddEntryActivity.class));
     }
-
-    /**
-     *  Removes all animals that are marked for delete, updates adapter accordingly
-     */
-    private void updateAdapter() {
-        animalDAO.getAllAnimals().forEach(animal -> {
-            if (animal.isMarked_for_delete())
-                animalDAO.removeAnimal(animal.getName());
-        });
-        animalAdapter.notifyDataSetChanged();
-    }
-
 }
