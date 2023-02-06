@@ -38,6 +38,13 @@ public class DatabaseActivity extends AppCompatActivity {
         View addbtn = findViewById(R.id.addbtn);
         addbtn.setOnClickListener(view -> Util.startActivity(this, AddEntryActivity.class));
 
+        View sortbtn = findViewById(R.id.sort);
+        sortbtn.setOnClickListener(view -> {
+                    AnimalDAO.get().sort();
+                    animalAdapter.notifyDataSetChanged();
+        });
+
+
         animalAdapter.notifyDataSetChanged();
     }
 

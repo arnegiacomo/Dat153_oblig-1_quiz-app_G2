@@ -32,6 +32,9 @@ public class MainActivity extends AppCompatActivity {
 
         Button databaseButton = findViewById(R.id.db);
         databaseButton.setOnClickListener(view -> Util.startActivity(MainActivity.this, DatabaseActivity.class));
+
+        Button add = findViewById(R.id.add);
+        add.setOnClickListener(view -> Util.startActivity(MainActivity.this, AddEntryActivity.class));
     }
 
     /**

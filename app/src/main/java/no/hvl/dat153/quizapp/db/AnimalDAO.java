@@ -3,9 +3,12 @@ package no.hvl.dat153.quizapp.db;
 import android.graphics.Bitmap;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import no.hvl.dat153.quizapp.model.Animal;
 
@@ -16,6 +19,7 @@ public class AnimalDAO {
 
     private static AnimalDAO animalDAO;
     private final Map<String, Animal> repo = new HashMap<>();
+    private ArrayList<Animal> sortedList = new ArrayList<>();
 
     /**
      * Populates the database
@@ -29,7 +33,7 @@ public class AnimalDAO {
      * @return All animals
      */
     public List<Animal> getAllAnimals() {
-        return new ArrayList<>(repo.values());
+        return sortedList;
     }
 
     /**
@@ -50,6 +54,25 @@ public class AnimalDAO {
     public void addAnimal(String name, Bitmap bitmap) {
         Animal animal = new Animal(name, bitmap);
         repo.put(animal.getName(), animal);
+        sortedList.add(animal);
+        sortedList.sort(Comparator.comparing(Animal::getName));
+    }
+
+    /**
+     *
+     */
+    public void sort() {
+        Stack stack = new Stack();
+
+        for(Animal x : sortedList) {
+            stack.add(x);
+        }
+
+        sortedList = new ArrayList<>();
+
+        while (!stack.empty()) {
+            sortedList.add((Animal) stack.pop());
+        }
     }
 
     /**
@@ -58,6 +81,7 @@ public class AnimalDAO {
      * @param name name of animal to be deleted
      */
     public void removeAnimal(String name) {
+        sortedList.remove(repo.get(name));
         repo.remove(name);
     }
 
