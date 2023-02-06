@@ -1,11 +1,12 @@
 package no.hvl.dat153.quizapp.db;
 
+import android.graphics.Bitmap;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import no.hvl.dat153.quizapp.R;
 import no.hvl.dat153.quizapp.model.Animal;
 
 /**
@@ -20,13 +21,7 @@ public class AnimalDAO {
      * Populates the database
      */
     private AnimalDAO() {
-        Animal cat = new Animal("Cat", R.drawable.cat);
-        Animal dog = new Animal("Dog", R.drawable.dog);
-        Animal giantAntEater = new Animal("Giant Ant Eater", R.drawable.anteater);
 
-        repo.put(cat.getName(), cat);
-        repo.put(dog.getName(), dog);
-        repo.put(giantAntEater.getName(), giantAntEater);
     }
 
     /**
@@ -50,10 +45,10 @@ public class AnimalDAO {
      * Add new animal to database
      *
      * @param name Animal name
-     * @param image_res_id ID of image to animal
+     * @param bitmap bitmap of image to animal
      */
-    public void addAnimal(String name, int image_res_id) {
-        Animal animal = new Animal(name, image_res_id);
+    public void addAnimal(String name, Bitmap bitmap) {
+        Animal animal = new Animal(name, bitmap);
         repo.put(animal.getName(), animal);
     }
 
@@ -77,5 +72,4 @@ public class AnimalDAO {
 
         return animalDAO;
     }
-
 }
