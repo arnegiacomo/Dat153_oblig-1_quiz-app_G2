@@ -52,6 +52,8 @@ public class AddEntryActivity extends AppCompatActivity {
             }
         });
 
+        image = findViewById(R.id.imageanimal);
+
         View add = findViewById(R.id.addentrybtn);
         add.setOnClickListener(view -> {AnimalDAO.get().addAnimal(name, bitmap);
             finish();
