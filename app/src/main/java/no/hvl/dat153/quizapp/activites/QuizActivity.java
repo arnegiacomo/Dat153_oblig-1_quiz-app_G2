@@ -38,6 +38,7 @@ public class QuizActivity extends AppCompatActivity {
     private int index;
     private int counter;
     private int countercorrect;
+    private String correctname;
     private ProgressBar progressBar;
     private int progress = 0;
     private final int DELAY = 30000; //maximum time in hard mode
@@ -49,8 +50,8 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_quiz);
 
         //For adding a back button
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        //ActionBar actionBar = getSupportActionBar();
+        //actionBar.setDisplayHomeAsUpEnabled(true);
 
         //Setups that has to be done when the activity is lauched
         Intent intent = getIntent();
@@ -62,7 +63,7 @@ public class QuizActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         update();
 
-        //If the hardmode is active then the inactivity timer should start
+        //If the hard mode is active then the inactivity timer should start
         if (difficulty.equals("hard")){
             startInactivityTimer();
         }
@@ -221,7 +222,10 @@ public class QuizActivity extends AppCompatActivity {
             if (buttonnumber==correctnameplace){
                 countercorrect++;
                 image.startAnimation(correctAnimation);
-            } else {image.startAnimation(incorrectAnimation);}
+            } else {
+                image.startAnimation(incorrectAnimation);
+                Toast.makeText(getApplicationContext(), "Correct answer was: "+correctname, Toast.LENGTH_SHORT).show();
+            }
 
             counter++;
         }
@@ -266,33 +270,41 @@ public class QuizActivity extends AppCompatActivity {
             This logic is getting two random names from the database that are different to each other
             and different to the correct answer
              */
-            if(option1==index){
-                if (option1<size-1){option1++;}else{option1--;};
-            }
-            if(option2==index||option2==option1){
-                if (option2<size-2){option2++;if (option2==option1||option2==index){option2++;}}
-                else if(option2>1){option2--;if (option2==option1||option2==index){option2--;}}
-                else {if(index==0||option1==0){option2++;}else{option2--;}}
+            if (size>2){
+                if(option1==index){
+                    if (option1<size-1){option1++;}else{option1--;};
+                }
+                if(option2==index||option2==option1){
+                    if (option2<size-2){option2++;if (option2==option1||option2==index){option2++;}}
+                    else if(option2>1){option2--;if (option2==option1||option2==index){option2--;}}
+                    else {if(index==0||option1==0){option2++;}else{option2--;}}
+                }
+            }else if(size==2){
+                if (index==1){option1=0;option2=0;}
+                else{option1=1;option2=1;}
+            }else if (size==1) {
+                option1=0;option2=0;
             }
 
             /*
             Depending on the shuffle chosen correctnamespace (button number where the correct answer
             should sit) the text of the buttons is updated
              */
+            correctname=animalDAO.getAllNames().get(index);
             if (correctnameplace ==0){
-                button1.setText(animalDAO.getAllNames().get(index));
+                button1.setText(correctname);
                 button2.setText(animalDAO.getAllNames().get(option1));
                 button3.setText(animalDAO.getAllNames().get(option2));
             }
             else if (correctnameplace ==1){
                 button1.setText(animalDAO.getAllNames().get(option1));
-                button2.setText(animalDAO.getAllNames().get(index));
+                button2.setText(correctname);
                 button3.setText(animalDAO.getAllNames().get(option2));
             }
             else{
                 button1.setText(animalDAO.getAllNames().get(option1));
                 button2.setText(animalDAO.getAllNames().get(option2));
-                button3.setText(animalDAO.getAllNames().get(index));
+                button3.setText(correctname);
             }
 
             //The inactivity timer is reset after all the graphical stuff is done
