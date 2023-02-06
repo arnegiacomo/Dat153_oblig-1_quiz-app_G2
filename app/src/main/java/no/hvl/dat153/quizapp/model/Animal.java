@@ -1,5 +1,8 @@
 package no.hvl.dat153.quizapp.model;
 
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
+
 import lombok.Data;
 import lombok.NonNull;
 
@@ -12,7 +15,7 @@ public class Animal {
     @NonNull
     private String name;
     @NonNull
-    private Integer image_res_id;
+    private Bitmap bitmap;
     private boolean marked_for_delete = false;
 
 }

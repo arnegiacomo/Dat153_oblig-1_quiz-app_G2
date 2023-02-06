@@ -38,7 +38,7 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalView
     public void onBindViewHolder(AnimalViewHolder holder, int position) {
         Animal animal = animalDAO.getAllAnimals().get(position);
         holder.textView.setText(animal.getName());
-        holder.imageView.setImageResource(animal.getImage_res_id());
+        holder.imageView.setImageBitmap(animal.getBitmap());
         holder.markedForDelete.setOnClickListener(view -> animal.setMarked_for_delete(true));
 
         animalViewHolderList.add(holder);

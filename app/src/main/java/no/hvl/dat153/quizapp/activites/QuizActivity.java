@@ -179,7 +179,7 @@ public class QuizActivity extends AppCompatActivity {
             Animal animal = animalDAO.getAllAnimals().get(index);
 
 
-            imageView.setImageResource(animal.getImage_res_id());
+            imageView.setImageBitmap(animal.getBitmap());
 
             correctnameplace = random.nextInt(3);
             int option1=random.nextInt(size);
