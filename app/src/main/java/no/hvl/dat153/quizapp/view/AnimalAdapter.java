@@ -37,9 +37,9 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalView
     @Override
     public void onBindViewHolder(AnimalViewHolder holder, int position) {
         Animal animal = animalDAO.getAllAnimals().get(position);
-        holder.animal = animal;
         holder.textView.setText(animal.getName());
         holder.imageView.setImageResource(animal.getImage_res_id());
+        holder.markedForDelete.setOnClickListener(view -> animal.setMarked_for_delete(true));
 
         animalViewHolderList.add(holder);
     }
@@ -65,7 +65,6 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalView
 
     static class AnimalViewHolder extends RecyclerView.ViewHolder {
 
-        Animal animal;
         TextView textView;
         ImageView imageView;
         CheckBox markedForDelete;
@@ -75,8 +74,6 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalView
             textView = itemView.findViewById(R.id.text_view);
             imageView = itemView.findViewById(R.id.image_view);
             markedForDelete = itemView.findViewById(R.id.markedfordelete);
-
-            markedForDelete.setOnClickListener(view -> animal.setMarked_for_delete(true));
         }
     }
 }
