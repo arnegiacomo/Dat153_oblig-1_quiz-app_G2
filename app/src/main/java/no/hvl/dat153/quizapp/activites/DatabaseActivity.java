@@ -5,11 +5,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -19,8 +16,6 @@ import java.io.InputStream;
 
 import no.hvl.dat153.quizapp.R;
 import no.hvl.dat153.quizapp.db.AnimalDAO;
-import no.hvl.dat153.quizapp.model.Animal;
-import no.hvl.dat153.quizapp.util.Util;
 import no.hvl.dat153.quizapp.view.AnimalAdapter;
 
 public class DatabaseActivity extends AppCompatActivity {

@@ -1,7 +1,6 @@
 package no.hvl.dat153.quizapp.model;
 
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 
 import lombok.Data;
 import lombok.NonNull;
