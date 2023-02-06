@@ -6,58 +6,77 @@
     android:layout_height="match_parent"
     tools:context=".activites.MainActivity">
 
-    <Button
-        android:id="@+id/db"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="128dp"
-        android:layout_marginTop="48dp"
-        android:layout_marginEnd="128dp"
-        android:text="View Database"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/playquiz" />
-
-    <Button
-        android:id="@+id/playquiz"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="149dp"
-        android:layout_marginTop="160dp"
-        android:layout_marginEnd="149dp"
-        android:text="Play Quiz"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/add"
-        android:layout_width="409dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="146dp"
-        android:layout_marginTop="52dp"
-        android:layout_marginEnd="146dp"
-        android:layout_marginBottom="287dp"
-        android:text="Add entry"
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="430dp"
+        android:layout_height="760dp"
+        android:background="@drawable/background_gradient"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/db" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.517">
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="200dp"
+            app:srcCompat="@drawable/quizapp" />
+
+        <Button
+            android:id="@+id/playquiz"
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="200dp"
+            android:background="@drawable/custom_button_start"
+            android:text="Start quiz!"
+            android:textAllCaps="true"
+            android:textSize="20sp"
+            app:backgroundTint="@null" />
+
+        <Button
+            android:id="@+id/db"
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/custom_button"
+            android:text="view database"
+            android:textAllCaps="true"
+            android:textSize="20sp"
+            app:backgroundTint="@null" />
+
+        <Button
+            android:id="@+id/add"
+            android:layout_width="250dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/custom_button"
+            android:text="add entry"
+            android:textAllCaps="true"
+            android:textSize="20sp"
+            app:backgroundTint="@null" />
+
+    </LinearLayout>
 
     <Switch
         android:id="@+id/difficultySwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="161dp"
-        android:layout_marginTop="114dp"
-        android:layout_marginEnd="161dp"
-        android:layout_marginBottom="19dp"
+        android:layout_marginStart="280dp"
+        android:layout_marginTop="10dp"
+        android:gravity="end"
         android:text="Hard Mode"
-        app:layout_constraintBottom_toTopOf="@+id/playquiz"
+        android:textColor="@color/white"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
