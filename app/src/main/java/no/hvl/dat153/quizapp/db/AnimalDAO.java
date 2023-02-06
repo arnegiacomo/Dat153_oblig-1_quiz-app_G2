@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
+import java.util.stream.Collectors;
 
 import no.hvl.dat153.quizapp.model.Animal;
 
@@ -42,7 +43,7 @@ public class AnimalDAO {
      * @return List of all anmal names
      */
     public List<String> getAllNames() {
-        return new ArrayList<>(repo.keySet());
+        return sortedList.stream().map(Animal::getName).collect(Collectors.toList());
     }
 
     /**
