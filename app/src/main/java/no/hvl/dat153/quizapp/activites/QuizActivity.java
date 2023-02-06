@@ -254,7 +254,7 @@ public class QuizActivity extends AppCompatActivity {
             Animal animal = animalDAO.getAllAnimals().get(index);
 
             //updating the imageView
-            imageView.setImageResource(animal.getImage_res_id());
+            imageView.setImageBitmap(animal.getBitmap());
 
             //generating a random number for where the correct answer should be placed
             correctnameplace = random.nextInt(3);
