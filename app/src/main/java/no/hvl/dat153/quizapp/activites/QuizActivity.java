@@ -5,13 +5,16 @@ import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
@@ -35,24 +38,41 @@ public class QuizActivity extends AppCompatActivity {
     private int index;
     private int counter;
     private int countercorrect;
+    private ProgressBar progressBar;
+    private int progress = 0;
+    private final int DELAY = 30000; //maximum time in hard mode
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+        //For adding a back button
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
 
+        //Setups that has to be done when the activity is lauched
         Intent intent = getIntent();
         difficulty = intent.getStringExtra(Util.DIFFICULTY_MESSAGE);
-
         List<String> database = AnimalDAO.get().getAllNames();
         Collections.shuffle(database);
         counter=0;
         countercorrect=0;
+        progressBar = findViewById(R.id.progressBar);
         update();
 
+        //If the hardmode is active then the inactivity timer should start
+        if (difficulty.equals("hard")){
+            startInactivityTimer();
+        }
+
+        /*
+        Build in onClickListeners for each button
+        When a button is clicked the button launches the methods check() (for animation and answer
+        checking) and update() (for updating the GUI and selecting a new random photo with possible
+        answers)
+         */
         Button button1 = (Button) findViewById(R.id.button1);
         Button button2 = (Button) findViewById(R.id.button2);
         Button button3 = (Button) findViewById(R.id.button3);
@@ -89,7 +109,12 @@ public class QuizActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                //Finishing the activity
                 finish();
+                //Reset the Inactivity timer and the progress bar
+                mHandler.removeCallbacks(mRunnable);
+                progress = 0;
+                progressBar.setProgress(0);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -97,7 +122,47 @@ public class QuizActivity extends AppCompatActivity {
     }
 
 
+    private Handler mHandler = new Handler();
+    private Runnable mRunnable = new Runnable() {
+        @Override
+        public void run() {
+            progress += 100;
+            progressBar.setProgress(progress);
+            if (progress < DELAY) {
+                mHandler.postDelayed(this, 100);
+            } else {
+                Toast.makeText(getApplicationContext(), "Timer run out", Toast.LENGTH_SHORT).show();
+                check(-1);
+                update();
+            }
 
+        }
+    };
+
+    //With this method you can start the inactivity timer
+    private void startInactivityTimer() {
+        mHandler.removeCallbacks(mRunnable);
+        mHandler.postDelayed(mRunnable, 100);
+        progressBar.setMax(DELAY);
+    }
+
+    //This method resets the values of the inactivity timer and the progress bar and restarts it with startInactivityTimer()
+    private void resetInactivityTimer() {
+        mHandler.removeCallbacks(mRunnable);
+        progress = 0;
+        progressBar.setProgress(0);
+        startInactivityTimer();
+    }
+
+
+        /*
+        This method is checking if the correct button is clicked by comparing the value
+        in the number of the correct button with the number of the button that is clicked.
+        Depending on this the methods lauches either an animation for a correct answer or
+        one for the false answer. An animation consists of two seperated parts: first the
+        picture is increasing (correct answer) or decreasing (false answer), second the
+        background color is set for a duration of two second eiter on green or red
+         */
         private void check(int buttonnumber){
             Button button1 = (Button) findViewById(R.id.button1);
             Button button2 = (Button) findViewById(R.id.button2);
@@ -152,16 +217,24 @@ public class QuizActivity extends AppCompatActivity {
             Animation incorrectAnimation = AnimationUtils.loadAnimation(this, R.anim.incorrect_animation);
             ImageView image = findViewById(R.id.imageViewQuiz);
 
+            // Checking if button is correct und updating the counters for number of questions and correct answers
             if (buttonnumber==correctnameplace){
                 countercorrect++;
                 image.startAnimation(correctAnimation);
             } else {image.startAnimation(incorrectAnimation);}
 
             counter++;
-
         }
 
 
+        /*
+        This method is responsible for updating the GUI of the Quiz Activity. It updates the text
+        with the counter of correct answers, selects a new animal randomly, updates the image
+        with the new animal, randomly decides on which button the correct answer is placed,
+        selects to random wrong answers from the database and updates the text in the buttons
+        withe the correct and the wrong names. If hard mode is active the inactivity timer is
+        restarted in the end.
+         */
         private void update() {
 
             Button button1 = (Button) findViewById(R.id.button1);
@@ -170,21 +243,29 @@ public class QuizActivity extends AppCompatActivity {
             ImageView imageView = findViewById(R.id.imageViewQuiz);
             TextView textView = findViewById(R.id.textViewQuiz);
 
+            //update the textView with the number of correct answers
             textView.setText(countercorrect+" right answers out of "+counter+" questions");
 
             Random random = new Random();
 
+            //choose a random animal who's picture is shown next
             int size = animalDAO.getAllNames().size();
             index = random.nextInt(size);
             Animal animal = animalDAO.getAllAnimals().get(index);
 
-
+            //updating the imageView
             imageView.setImageResource(animal.getImage_res_id());
 
+            //generating a random number for where the correct answer should be placed
             correctnameplace = random.nextInt(3);
+            //generating random numbers for selecting the wrong names from the database
             int option1=random.nextInt(size);
             int option2=random.nextInt(size);
 
+            /*
+            This logic is getting two random names from the database that are different to each other
+            and different to the correct answer
+             */
             if(option1==index){
                 if (option1<size-1){option1++;}else{option1--;};
             }
@@ -194,6 +275,10 @@ public class QuizActivity extends AppCompatActivity {
                 else {if(index==0||option1==0){option2++;}else{option2--;}}
             }
 
+            /*
+            Depending on the shuffle chosen correctnamespace (button number where the correct answer
+            should sit) the text of the buttons is updated
+             */
             if (correctnameplace ==0){
                 button1.setText(animalDAO.getAllNames().get(index));
                 button2.setText(animalDAO.getAllNames().get(option1));
@@ -210,6 +295,10 @@ public class QuizActivity extends AppCompatActivity {
                 button3.setText(animalDAO.getAllNames().get(index));
             }
 
+            //The inactivity timer is reset after all the graphical stuff is done
+            if (difficulty.equals("hard")){
+                resetInactivityTimer();
+            }
         }
 
     }
