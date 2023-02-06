@@ -34,4 +34,28 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/gallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add from gallery"
+        tools:layout_editor_absoluteX="154dp"
+        tools:layout_editor_absoluteY="301dp" />
+
+    <Button
+        android:id="@+id/take"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Take photo"
+        tools:layout_editor_absoluteX="182dp"
+        tools:layout_editor_absoluteY="381dp" />
+
+    <ImageView
+        android:id="@+id/imageanimal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:layout_editor_absoluteX="21dp"
+        tools:layout_editor_absoluteY="455dp"
+        tools:srcCompat="@tools:sample/avatars" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
