@@ -49,10 +49,17 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalView
      */
     @SuppressLint("NotifyDataSetChanged")
     public void updateAdapter() {
+        for (int i = 0; i < animalDAO.getAllAnimals().size(); i++) {
+            if (animalDAO.getAllAnimals().get(i).isMarked_for_delete()) {
+                animalDAO.removeAnimal(animalDAO.getAllAnimals().get(i).getName());
+                i--;
+            }
+        }
+/*
         animalDAO.getAllAnimals().forEach(animal -> {
             if (animal.isMarked_for_delete())
                 animalDAO.removeAnimal(animal.getName());
-        });
+        });*/
         notifyDataSetChanged();
 
         animalViewHolderList.forEach(holder -> holder.markedForDelete.setChecked(false));
