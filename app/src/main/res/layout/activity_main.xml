@@ -10,15 +10,15 @@
         android:id="@+id/linearLayout3"
         android:layout_width="430dp"
         android:layout_height="760dp"
+        android:layout_gravity="center"
         android:background="@drawable/background_gradient"
         android:orientation="vertical"
-        android:layout_gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.526"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.517">
+        app:layout_constraintVertical_bias="0.827">
 
         <ImageView
             android:id="@+id/imageView2"
