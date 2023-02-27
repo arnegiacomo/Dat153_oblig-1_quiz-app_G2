@@ -49,9 +49,6 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        //For adding a back button
-        //ActionBar actionBar = getSupportActionBar();
-        //actionBar.setDisplayHomeAsUpEnabled(true);
 
         //Setups that has to be done when the activity is lauched
         Intent intent = getIntent();
@@ -105,21 +102,19 @@ public class QuizActivity extends AppCompatActivity {
 
 
 
-    // Handel a press on the back button
+    // Handel a press on the back button or any other interruptions
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                //Finishing the activity
-                finish();
-                //Reset the Inactivity timer and the progress bar
-                mHandler.removeCallbacks(mRunnable);
-                progress = 0;
-                progressBar.setProgress(0);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
+    protected void onPause() {
+        super.onPause();
+
+        //Finishing the activity
+        finish();
+
+        //Reset the Inactivity timer and the progress bar
+        mHandler.removeCallbacks(mRunnable);
+        progress = 0;
+        progressBar.setProgress(0);
+
     }
 
 
