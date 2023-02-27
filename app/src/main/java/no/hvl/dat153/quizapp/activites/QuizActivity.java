@@ -3,6 +3,7 @@ package no.hvl.dat153.quizapp.activites;
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,9 +23,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 import no.hvl.dat153.quizapp.R;
 import no.hvl.dat153.quizapp.db.AnimalDAO;
+import no.hvl.dat153.quizapp.db.AnimalRepository;
 import no.hvl.dat153.quizapp.model.Animal;
 import no.hvl.dat153.quizapp.util.Util;
 
@@ -32,7 +35,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private String difficulty;
 
-    private final AnimalDAO animalDAO = AnimalDAO.get();
+    private AnimalRepository repository;
 
     private int correctnameplace;
     private int index;
@@ -49,12 +52,11 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
+        repository = new AnimalRepository( getApplication());
 
         //Setups that has to be done when the activity is lauched
         Intent intent = getIntent();
         difficulty = intent.getStringExtra(Util.DIFFICULTY_MESSAGE);
-        List<String> database = AnimalDAO.get().getAllNames();
-        Collections.shuffle(database);
         counter=0;
         countercorrect=0;
         progressBar = findViewById(R.id.progressBar);
@@ -248,64 +250,72 @@ public class QuizActivity extends AppCompatActivity {
             Random random = new Random();
 
             //choose a random animal who's picture is shown next
-            int size = animalDAO.getAllNames().size();
-            index = random.nextInt(size);
-            Animal animal = animalDAO.getAllAnimals().get(index);
+            repository.getAllAnimals().observe(this,
+                    animals -> {
+                        int size = animals.size();
+                        index = random.nextInt(size);
+                        Animal animal = repository.getAllAnimals().getValue().get(index);
 
-            //updating the imageView
-            imageView.setImageBitmap(animal.getBitmap());
+                        //updating the imageView
+                        imageView.setImageBitmap(BitmapFactory.decodeByteArray(animal.getBitmap(), 0, animal.getBitmap().length));
 
-            //generating a random number for where the correct answer should be placed
-            correctnameplace = random.nextInt(3);
-            //generating random numbers for selecting the wrong names from the database
-            int option1=random.nextInt(size);
-            int option2=random.nextInt(size);
+                        //generating a random number for where the correct answer should be placed
+                        correctnameplace = random.nextInt(3);
+                        //generating random numbers for selecting the wrong names from the database
+                        int option1=random.nextInt(size);
+                        int option2=random.nextInt(size);
 
             /*
             This logic is getting two random names from the database that are different to each other
             and different to the correct answer
              */
-            if (size>2){
-                if(option1==index){
-                    if (option1<size-1){option1++;}else{option1--;};
-                }
-                if(option2==index||option2==option1){
-                    if (option2<size-2){option2++;if (option2==option1||option2==index){option2++;}}
-                    else if(option2>1){option2--;if (option2==option1||option2==index){option2--;}}
-                    else {if(index==0||option1==0){option2++;}else{option2--;}}
-                }
-            }else if(size==2){
-                if (index==1){option1=0;option2=0;}
-                else{option1=1;option2=1;}
-            }else if (size==1) {
-                option1=0;option2=0;
-            }
+                        if (size>2){
+                            if(option1==index){
+                                if (option1<size-1){option1++;}else{option1--;};
+                            }
+                            if(option2==index||option2==option1){
+                                if (option2<size-2){option2++;if (option2==option1||option2==index){option2++;}}
+                                else if(option2>1){option2--;if (option2==option1||option2==index){option2--;}}
+                                else {if(index==0||option1==0){option2++;}else{option2--;}}
+                            }
+                        }else if(size==2){
+                            if (index==1){option1=0;option2=0;}
+                            else{option1=1;option2=1;}
+                        }else if (size==1) {
+                            option1=0;option2=0;
+                        }
 
-            /*
-            Depending on the shuffle chosen correctnamespace (button number where the correct answer
-            should sit) the text of the buttons is updated
-             */
-            correctname=animalDAO.getAllNames().get(index);
-            if (correctnameplace ==0){
-                button1.setText(correctname);
-                button2.setText(animalDAO.getAllNames().get(option1));
-                button3.setText(animalDAO.getAllNames().get(option2));
-            }
-            else if (correctnameplace ==1){
-                button1.setText(animalDAO.getAllNames().get(option1));
-                button2.setText(correctname);
-                button3.setText(animalDAO.getAllNames().get(option2));
-            }
-            else{
-                button1.setText(animalDAO.getAllNames().get(option1));
-                button2.setText(animalDAO.getAllNames().get(option2));
-                button3.setText(correctname);
-            }
+                        /*
+                        Depending on the shuffle chosen correctnamespace (button number where the correct answer
+                        should sit) the text of the buttons is updated
+                         */
 
-            //The inactivity timer is reset after all the graphical stuff is done
-            if (difficulty.equals("hard")){
-                resetInactivityTimer();
-            }
+                        List<String> names = animals.stream().map(Animal::getName).collect(Collectors.toList());
+                        correctname=names.get(index);
+                        if (correctnameplace ==0){
+                            button1.setText(correctname);
+                            button2.setText(names.get(option1));
+                            button3.setText(names.get(option2));
+                        }
+                        else if (correctnameplace ==1){
+                            button1.setText(names.get(option1));
+                            button2.setText(correctname);
+                            button3.setText(names.get(option2));
+                        }
+                        else{
+                            button1.setText(names.get(option1));
+                            button2.setText(names.get(option2));
+                            button3.setText(correctname);
+                        }
+
+                        //The inactivity timer is reset after all the graphical stuff is done
+                        if (difficulty.equals("hard")){
+                            resetInactivityTimer();
+                        }
+                    });
+
+
+
         }
 
     }

@@ -14,11 +14,15 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 import no.hvl.dat153.quizapp.R;
 import no.hvl.dat153.quizapp.db.AnimalDAO;
+import no.hvl.dat153.quizapp.db.AnimalRepository;
+import no.hvl.dat153.quizapp.model.Animal;
 
 public class AddEntryActivity extends AppCompatActivity {
 
@@ -26,10 +30,14 @@ public class AddEntryActivity extends AppCompatActivity {
     private String name;
     private ImageView image;
 
+    private AnimalRepository repository;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_entry);
+
+        repository = new AnimalRepository( getApplication());
 
         View gallerybtn = findViewById(R.id.gallery);
         gallerybtn.setOnClickListener(view -> pickImageFromGallery());
@@ -55,7 +63,16 @@ public class AddEntryActivity extends AppCompatActivity {
         image = findViewById(R.id.imageanimal);
 
         View add = findViewById(R.id.addentrybtn);
-        add.setOnClickListener(view -> {AnimalDAO.get().addAnimal(name, bitmap);
+
+        add.setOnClickListener(view -> {
+
+            new Thread(() -> {
+                // Convert the bitmap to a byte array
+                ByteArrayOutputStream stream1 = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream1);
+                byte[] byteArray = stream1.toByteArray();
+                repository.insertAnimal(new Animal(name, byteArray));
+            }).start();
             finish();
         });
 
