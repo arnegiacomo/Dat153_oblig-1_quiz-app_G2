@@ -110,7 +110,7 @@ public class QuizActivity extends AppCompatActivity {
         //Finishing the activity
         finish();
 
-        //Reset the Inactivity timer and the progress bar
+        //Stop the Inactivity timer and the progress bar
         mHandler.removeCallbacks(mRunnable);
         progress = 0;
         progressBar.setProgress(0);
@@ -308,4 +308,14 @@ public class QuizActivity extends AppCompatActivity {
             }
         }
 
+
+        public int getCorrectButton(){
+            return correctnameplace;
+        }
+    public int getCounter(){
+        return counter;
     }
+    public int getCountercorrect(){
+        return countercorrect;
+    }
+}
