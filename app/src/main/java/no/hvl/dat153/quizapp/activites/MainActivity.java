@@ -1,28 +1,40 @@
 package no.hvl.dat153.quizapp.activites;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
 
 import android.annotation.SuppressLint;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Switch;
 
+import java.io.ByteArrayOutputStream;
+import java.util.List;
+
 import no.hvl.dat153.quizapp.R;
 import no.hvl.dat153.quizapp.db.AnimalDAO;
+import no.hvl.dat153.quizapp.db.AnimalRepository;
+import no.hvl.dat153.quizapp.model.Animal;
 import no.hvl.dat153.quizapp.util.Util;
 
 public class MainActivity extends AppCompatActivity {
 
     private String difficulty = "easy";
+    private AnimalRepository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        addInitialEntries();
+        repository = new AnimalRepository( getApplication());
+            repository.getAllAnimals().observe(this,
+                    animals -> {
+                        if(animals.size() < 3)
+                            addInitialEntries();
+                    });
 
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch difficultySwitch = findViewById(R.id.difficultySwitch);
         difficultySwitch.setOnCheckedChangeListener(this::setDifficulty);
@@ -49,15 +61,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void addInitialEntries() {
-        Thread thread = new Thread(() -> {
-            AnimalDAO.get().addAnimal("Cat", BitmapFactory.decodeResource(getResources(),
-                    R.drawable.cat));
-            AnimalDAO.get().addAnimal("Dog", BitmapFactory.decodeResource(getResources(),
-                    R.drawable.dog));
-            AnimalDAO.get().addAnimal("Giant Anteater", BitmapFactory.decodeResource(getResources(),
-                    R.drawable.anteater));
-        });
-        thread.start();
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.cat);
+            ByteArrayOutputStream stream1 = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream1);
+            byte[] byteArray = stream1.toByteArray();
+            repository.insertAnimal(new Animal("Cat", byteArray));
+            bitmap = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.dog);
+            stream1 = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream1);
+            byteArray = stream1.toByteArray();
+            repository.insertAnimal(new Animal("Dog", byteArray));
+            bitmap = BitmapFactory.decodeResource(getResources(),
+                    R.drawable.anteater);
+            stream1 = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream1);
+            byteArray = stream1.toByteArray();
+            repository.insertAnimal(new Animal("Anteater", byteArray));
     }
 
 }
