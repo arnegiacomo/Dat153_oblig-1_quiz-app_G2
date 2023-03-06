@@ -9,7 +9,9 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 
 import android.app.Activity;
+import android.app.Instrumentation;
 import android.content.Intent;
+import android.net.Uri;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.IdlingRegistry;
@@ -24,6 +26,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import no.hvl.dat153.quizapp.activites.DatabaseActivity;
 import no.hvl.dat153.quizapp.activites.QuizActivity;
 import no.hvl.dat153.quizapp.util.Util;
 
@@ -62,26 +65,31 @@ class MyIdlingResource implements IdlingResource {
 
 public class QuizActivityTest {
 
-    private ActivityScenario<QuizActivity> activityScenario;
+    private ActivityScenario<QuizActivity> QuizActivityScenario;
+    private DatabaseActivity DatabaseActivity;
     private MyIdlingResource idlingResource;
 
     @Before
     public void setUp() {
-        Intent intent = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), QuizActivity.class);
-        intent.putExtra(Util.DIFFICULTY_MESSAGE, "easy");
-        activityScenario = ActivityScenario.launch(intent);
+        Intent Quizintent = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), QuizActivity.class);
+        Quizintent.putExtra(Util.DIFFICULTY_MESSAGE, "easy");
+        QuizActivityScenario = ActivityScenario.launch(Quizintent);
+
         idlingResource = new MyIdlingResource();
         IdlingRegistry.getInstance().register(idlingResource);
+
+
     }
 
 
     @Rule
-    public ActivityScenarioRule<QuizActivity> activityRule = new ActivityScenarioRule<>(QuizActivity.class);
+    public ActivityScenarioRule<QuizActivity> QuizActivityRule = new ActivityScenarioRule<>(QuizActivity.class);
+    public ActivityScenarioRule<DatabaseActivity> DatabaseActivityRule = new ActivityScenarioRule<>(DatabaseActivity.class);
 
 
     @Test
-    public void testQuiz() {
-        activityScenario.onActivity(activity -> {
+    public void testQuizActivity() {
+        QuizActivityScenario.onActivity(activity -> {
             // Perform long-running operation on background thread
             new Thread(() -> {
                 int correctnamebutton = activity.getCorrectButton();
@@ -120,13 +128,15 @@ public class QuizActivityTest {
             // Set the IdlingResource to busy
             idlingResource.setIdle(false);
         });
-
     }
+
+
+
 
 
     @After
     public void tearDown() {
-        activityScenario.close();
+        QuizActivityScenario.close();
         IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
