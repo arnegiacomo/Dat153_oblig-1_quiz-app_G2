@@ -2,13 +2,13 @@ package no.hvl.dat153.quizapp.activites;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -18,21 +18,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
 import no.hvl.dat153.quizapp.R;
-import no.hvl.dat153.quizapp.db.AnimalDAO;
-import no.hvl.dat153.quizapp.db.AnimalRepository;
 import no.hvl.dat153.quizapp.model.Animal;
 import no.hvl.dat153.quizapp.util.Util;
-import no.hvl.dat153.quizapp.viewmodels.MainViewModel;
 import no.hvl.dat153.quizapp.viewmodels.QuizViewModel;
 
 public class QuizActivity extends AppCompatActivity {
@@ -55,7 +51,7 @@ public class QuizActivity extends AppCompatActivity {
         //Setups that has to be done when the activity is lauched
         Intent intent = getIntent();
 
-        Log.d("ABC","what you get: "+intent.getStringExtra(Util.DIFFICULTY_MESSAGE));
+        Log.d("ABC", "what you get: " + intent.getStringExtra(Util.DIFFICULTY_MESSAGE));
         if (intent.getStringExtra(Util.DIFFICULTY_MESSAGE) != null) {
             difficulty = intent.getStringExtra(Util.DIFFICULTY_MESSAGE);
         }
@@ -63,7 +59,7 @@ public class QuizActivity extends AppCompatActivity {
         update();
 
         //If the hard mode is active then the inactivity timer should start
-        if (difficulty.equals("hard")){
+        if (difficulty.equals("hard")) {
             startInactivityTimer();
         }
 
@@ -73,35 +69,25 @@ public class QuizActivity extends AppCompatActivity {
         checking) and update() (for updating the GUI and selecting a new random photo with possible
         answers)
          */
-        Button button1 = (Button) findViewById(R.id.button1);
-        Button button2 = (Button) findViewById(R.id.button2);
-        Button button3 = (Button) findViewById(R.id.button3);
+        Button button1 = findViewById(R.id.button1);
+        Button button2 = findViewById(R.id.button2);
+        Button button3 = findViewById(R.id.button3);
 
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                check(0);
-                update();
-            }
+        button1.setOnClickListener(v -> {
+            check(0);
+            update();
         });
 
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                check(1);
-                update();
-            }
+        button2.setOnClickListener(v -> {
+            check(1);
+            update();
         });
 
-        button3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                check(2);
-                update();
-            }
+        button3.setOnClickListener(v -> {
+            check(2);
+            update();
         });
     }
-
 
 
     // Handel a press on the back button or any other interruptions
@@ -117,8 +103,8 @@ public class QuizActivity extends AppCompatActivity {
     }
 
 
-    private Handler mHandler = new Handler();
-    private Runnable mRunnable = new Runnable() {
+    private final Handler mHandler = new Handler();
+    private final Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
             int progress = qViewModel.getProgress() + 100;
@@ -151,179 +137,184 @@ public class QuizActivity extends AppCompatActivity {
     }
 
 
-        /*
-        This method is checking if the correct button is clicked by comparing the value
-        in the number of the correct button with the number of the button that is clicked.
-        Depending on this the methods lauches either an animation for a correct answer or
-        one for the false answer. An animation consists of two seperated parts: first the
-        picture is increasing (correct answer) or decreasing (false answer), second the
-        background color is set for a duration of two second eiter on green or red
-         */
-        private void check(int buttonnumber){
-            Button button1 = (Button) findViewById(R.id.button1);
-            Button button2 = (Button) findViewById(R.id.button2);
-            Button button3 = (Button) findViewById(R.id.button3);
+    /*
+    This method is checking if the correct button is clicked by comparing the value
+    in the number of the correct button with the number of the button that is clicked.
+    Depending on this the methods lauches either an animation for a correct answer or
+    one for the false answer. An animation consists of two seperated parts: first the
+    picture is increasing (correct answer) or decreasing (false answer), second the
+    background color is set for a duration of two second eiter on green or red
+     */
+    private void check(int buttonnumber) {
 
-            // Animation of the background color
-            View view =findViewById(R.id.QuizLayout);
-            int colorFrom = Color.WHITE;
-            int colorToCorrect = Color.GREEN;
-            int colorToFalse = Color.RED;
-            if (qViewModel.getCorrectnameplace()==buttonnumber){
-                ValueAnimator colorAnimationCorrect = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorToCorrect);
-                colorAnimationCorrect.setDuration(1000);
-                colorAnimationCorrect.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                            view.setBackgroundColor((int) animation.getAnimatedValue());
-                    }
-                });colorAnimationCorrect.start();
+        // Animation of the background color
+        View view = findViewById(R.id.QuizLayout);
+        int colorFrom = Color.WHITE;
+        int colorToCorrect = Color.GREEN;
+        int colorToFalse = Color.RED;
+        if (qViewModel.getCorrectnameplace() == buttonnumber) {
+            ValueAnimator colorAnimationCorrect = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorToCorrect);
+            colorAnimationCorrect.setDuration(1000);
+            colorAnimationCorrect.addUpdateListener(animation -> view.setBackgroundColor((int) animation.getAnimatedValue()));
+            colorAnimationCorrect.start();
 
-                ValueAnimator colorAnimationBack = ValueAnimator.ofObject(new ArgbEvaluator(), colorToCorrect,colorFrom);
-                colorAnimationBack.setDuration(1000);
-                colorAnimationBack.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                        view.setBackgroundColor((int) animation.getAnimatedValue());
-                    }
-                });colorAnimationBack.start();
-            }
-            else{
-                ValueAnimator colorAnimationFalse = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorToFalse);
-                colorAnimationFalse.setDuration(1000);
-                colorAnimationFalse.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                            view.setBackgroundColor((int) animation.getAnimatedValue());
-                    }
-                 });colorAnimationFalse.start();
+            ValueAnimator colorAnimationBack = ValueAnimator.ofObject(new ArgbEvaluator(), colorToCorrect, colorFrom);
+            colorAnimationBack.setDuration(1000);
+            colorAnimationBack.addUpdateListener(animation -> view.setBackgroundColor((int) animation.getAnimatedValue()));
+            colorAnimationBack.start();
+        } else {
+            ValueAnimator colorAnimationFalse = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorToFalse);
+            colorAnimationFalse.setDuration(1000);
+            colorAnimationFalse.addUpdateListener(animation -> view.setBackgroundColor((int) animation.getAnimatedValue()));
+            colorAnimationFalse.start();
 
-                 ValueAnimator colorAnimationBack = ValueAnimator.ofObject(new ArgbEvaluator(), colorToFalse,colorFrom);
-                colorAnimationBack.setDuration(1000);
-                colorAnimationBack.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                    @Override
-                    public void onAnimationUpdate(ValueAnimator animation) {
-                         view.setBackgroundColor((int) animation.getAnimatedValue());
-                    }
-                });colorAnimationBack.start();
-            }
-
-            // Animation of the picture
-            Animation correctAnimation = AnimationUtils.loadAnimation(this, R.anim.correct_animation);
-            Animation incorrectAnimation = AnimationUtils.loadAnimation(this, R.anim.incorrect_animation);
-            ImageView image = findViewById(R.id.imageViewQuiz);
-
-            // Checking if button is correct und updating the counters for number of questions and correct answers
-            if (buttonnumber==qViewModel.getCorrectnameplace()){
-                qViewModel.setCountercorrect(qViewModel.getCountercorrect() + 1);
-                image.startAnimation(correctAnimation);
-            } else {
-                image.startAnimation(incorrectAnimation);
-                Toast.makeText(getApplicationContext(), "Correct answer was: "+qViewModel.getCorrectname(), Toast.LENGTH_SHORT).show();
-            }
-
-            qViewModel.setCounter(qViewModel.getCounter() + 1);
+            ValueAnimator colorAnimationBack = ValueAnimator.ofObject(new ArgbEvaluator(), colorToFalse, colorFrom);
+            colorAnimationBack.setDuration(1000);
+            colorAnimationBack.addUpdateListener(animation -> view.setBackgroundColor((int) animation.getAnimatedValue()));
+            colorAnimationBack.start();
         }
 
+        // Animation of the picture
+        Animation correctAnimation = AnimationUtils.loadAnimation(this, R.anim.correct_animation);
+        Animation incorrectAnimation = AnimationUtils.loadAnimation(this, R.anim.incorrect_animation);
+        ImageView image = findViewById(R.id.imageViewQuiz);
 
-        /*
-        This method is responsible for updating the GUI of the Quiz Activity. It updates the text
-        with the counter of correct answers, selects a new animal randomly, updates the image
-        with the new animal, randomly decides on which button the correct answer is placed,
-        selects to random wrong answers from the database and updates the text in the buttons
-        withe the correct and the wrong names. If hard mode is active the inactivity timer is
-        restarted in the end.
-         */
-        private void update() {
+        // Checking if button is correct und updating the counters for number of questions and correct answers
+        if (buttonnumber == qViewModel.getCorrectnameplace()) {
+            qViewModel.setCountercorrect(qViewModel.getCountercorrect() + 1);
+            image.startAnimation(correctAnimation);
+        } else {
+            image.startAnimation(incorrectAnimation);
+            Toast.makeText(getApplicationContext(), "Correct answer was: " + qViewModel.getCorrectname(), Toast.LENGTH_SHORT).show();
+        }
 
-            Button button1 = (Button) findViewById(R.id.button1);
-            Button button2 = (Button) findViewById(R.id.button2);
-            Button button3 = (Button) findViewById(R.id.button3);
-            ImageView imageView = findViewById(R.id.imageViewQuiz);
-            TextView textView = findViewById(R.id.textViewQuiz);
+        qViewModel.setCounter(qViewModel.getCounter() + 1);
+    }
 
-            //update the textView with the number of correct answers
-            textView.setText(qViewModel.getCountercorrect()+" right answers out of "+qViewModel.getCounter()+" questions");
 
-            Random random = new Random();
+    /*
+    This method is responsible for updating the GUI of the Quiz Activity. It updates the text
+    with the counter of correct answers, selects a new animal randomly, updates the image
+    with the new animal, randomly decides on which button the correct answer is placed,
+    selects to random wrong answers from the database and updates the text in the buttons
+    withe the correct and the wrong names. If hard mode is active the inactivity timer is
+    restarted in the end.
+     */
+    @SuppressLint("SetTextI18n")
+    private void update() {
 
-            //choose a random animal who's picture is shown next
-            qViewModel.getAllAnimals().observe(this,
-                    animals -> {
-                        int size = animals.size();
-                        qViewModel.setIndex(random.nextInt(size));
-                        Animal animal = qViewModel.getAllAnimals().getValue().get(qViewModel.getIndex());
+        Button button1 = findViewById(R.id.button1);
+        Button button2 = findViewById(R.id.button2);
+        Button button3 = findViewById(R.id.button3);
+        ImageView imageView = findViewById(R.id.imageViewQuiz);
+        TextView textView = findViewById(R.id.textViewQuiz);
 
-                        //updating the imageView
-                        imageView.setImageBitmap(BitmapFactory.decodeByteArray(animal.getBitmap(), 0, animal.getBitmap().length));
+        //update the textView with the number of correct answers
+        textView.setText(qViewModel.getCountercorrect() + " right answers out of " + qViewModel.getCounter() + " questions");
 
-                        //generating a random number for where the correct answer should be placed
-                        qViewModel.setCorrectnameplace(random.nextInt(3));
-                        //generating random numbers for selecting the wrong names from the database
-                        int option1=random.nextInt(size);
-                        int option2=random.nextInt(size);
+        Random random = new Random();
+
+        //choose a random animal who's picture is shown next
+        qViewModel.getAllAnimals().observe(this,
+                animals -> {
+                    int size = animals.size();
+                    qViewModel.setIndex(random.nextInt(size));
+                    Animal animal = Objects.requireNonNull(qViewModel.getAllAnimals().getValue()).get(qViewModel.getIndex());
+
+                    //updating the imageView
+                    imageView.setImageBitmap(BitmapFactory.decodeByteArray(animal.getBitmap(), 0, animal.getBitmap().length));
+
+                    //generating a random number for where the correct answer should be placed
+                    qViewModel.setCorrectnameplace(random.nextInt(3));
+                    //generating random numbers for selecting the wrong names from the database
+                    int option1 = random.nextInt(size);
+                    int option2 = random.nextInt(size);
 
             /*
             This logic is getting two random names from the database that are different to each other
             and different to the correct answer
              */
-                        if (size>2){
-                            if(option1==qViewModel.getIndex()){
-                                if (option1<size-1){option1++;}else{option1--;};
+                    if (size > 2) {
+                        if (option1 == qViewModel.getIndex()) {
+                            if (option1 < size - 1) {
+                                option1++;
+                            } else {
+                                option1--;
                             }
-                            if(option2==qViewModel.getIndex()||option2==option1){
-                                if (option2<size-2){option2++;if (option2==option1||option2==qViewModel.getIndex()){option2++;}}
-                                else if(option2>1){option2--;if (option2==option1||option2==qViewModel.getIndex()){option2--;}}
-                                else {if(qViewModel.getIndex()==0||option1==0){option2++;}else{option2--;}}
-                            }
-                        }else if(size==2){
-                            if (qViewModel.getIndex()==1){option1=0;option2=0;}
-                            else{option1=1;option2=1;}
-                        }else if (size==1) {
-                            option1=0;option2=0;
+
                         }
+                        if (option2 == qViewModel.getIndex() || option2 == option1) {
+                            if (option2 < size - 2) {
+                                option2++;
+                                if (option2 == option1 || option2 == qViewModel.getIndex()) {
+                                    option2++;
+                                }
+                            } else if (option2 > 1) {
+                                option2--;
+                                if (option2 == option1 || option2 == qViewModel.getIndex()) {
+                                    option2--;
+                                }
+                            } else {
+                                if (qViewModel.getIndex() == 0 || option1 == 0) {
+                                    option2++;
+                                } else {
+                                    option2--;
+                                }
+                            }
+                        }
+                    } else if (size == 2) {
+                        if (qViewModel.getIndex() == 1) {
+                            option1 = 0;
+                            option2 = 0;
+                        } else {
+                            option1 = 1;
+                            option2 = 1;
+                        }
+                    } else if (size == 1) {
+                        option1 = 0;
+                        option2 = 0;
+                    }
 
                         /*
                         Depending on the shuffle chosen correctnamespace (button number where the correct answer
                         should sit) the text of the buttons is updated
                          */
 
-                        List<String> names = animals.stream().map(Animal::getName).collect(Collectors.toList());
-                        qViewModel.setCorrectname(names.get(qViewModel.getIndex()));
-                        if (qViewModel.getCorrectnameplace() ==0){
-                            button1.setText(qViewModel.getCorrectname());
-                            button2.setText(names.get(option1));
-                            button3.setText(names.get(option2));
-                        }
-                        else if (qViewModel.getCorrectnameplace() ==1){
-                            button1.setText(names.get(option1));
-                            button2.setText(qViewModel.getCorrectname());
-                            button3.setText(names.get(option2));
-                        }
-                        else{
-                            button1.setText(names.get(option1));
-                            button2.setText(names.get(option2));
-                            button3.setText(qViewModel.getCorrectname());
-                        }
+                    List<String> names = animals.stream().map(Animal::getName).collect(Collectors.toList());
+                    qViewModel.setCorrectname(names.get(qViewModel.getIndex()));
+                    if (qViewModel.getCorrectnameplace() == 0) {
+                        button1.setText(qViewModel.getCorrectname());
+                        button2.setText(names.get(option1));
+                        button3.setText(names.get(option2));
+                    } else if (qViewModel.getCorrectnameplace() == 1) {
+                        button1.setText(names.get(option1));
+                        button2.setText(qViewModel.getCorrectname());
+                        button3.setText(names.get(option2));
+                    } else {
+                        button1.setText(names.get(option1));
+                        button2.setText(names.get(option2));
+                        button3.setText(qViewModel.getCorrectname());
+                    }
 
-                        //The inactivity timer is reset after all the graphical stuff is done
-                        if (difficulty.equals("hard")){
-                            resetInactivityTimer();
-                        }
-                    });
+                    //The inactivity timer is reset after all the graphical stuff is done
+                    if (difficulty.equals("hard")) {
+                        resetInactivityTimer();
+                    }
+                });
 
 
+    }
 
-        }
 
+    public int getCorrectButton() {
+        return qViewModel.getCorrectnameplace();
+    }
 
-        public int getCorrectButton(){
-            return qViewModel.getCorrectnameplace();
-        }
-    public int getCounter(){
+    public int getCounter() {
         return qViewModel.getCounter();
     }
-    public int getCountercorrect(){
+
+    public int getCountercorrect() {
         return qViewModel.getCountercorrect();
     }
 }
