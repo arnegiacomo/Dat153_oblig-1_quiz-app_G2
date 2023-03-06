@@ -14,7 +14,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,7 +36,6 @@ public class QuizActivity extends AppCompatActivity {
 
     private QuizViewModel qViewModel;
 
-    private ProgressBar progressBar;
     private final int DELAY = 30000; //maximum time in hard mode
 
 
@@ -55,7 +53,7 @@ public class QuizActivity extends AppCompatActivity {
         if (intent.getStringExtra(Util.DIFFICULTY_MESSAGE) != null) {
             difficulty = intent.getStringExtra(Util.DIFFICULTY_MESSAGE);
         }
-        progressBar = findViewById(R.id.progressBar);
+        qViewModel.setProgressBar(findViewById(R.id.progressBar));
         update();
 
         //If the hard mode is active then the inactivity timer should start
@@ -97,9 +95,6 @@ public class QuizActivity extends AppCompatActivity {
 
         //Stop the Inactivity timer and the progress bar
         mHandler.removeCallbacks(mRunnable);
-        qViewModel.setProgress(0);
-        progressBar.setProgress(0);
-
     }
 
 
@@ -109,7 +104,7 @@ public class QuizActivity extends AppCompatActivity {
         public void run() {
             int progress = qViewModel.getProgress() + 100;
             qViewModel.setProgress(progress);
-            progressBar.setProgress(progress);
+            qViewModel.getProgressBar().setProgress(progress);
             if (progress < DELAY) {
                 mHandler.postDelayed(this, 100);
             } else {
@@ -125,14 +120,14 @@ public class QuizActivity extends AppCompatActivity {
     private void startInactivityTimer() {
         mHandler.removeCallbacks(mRunnable);
         mHandler.postDelayed(mRunnable, 100);
-        progressBar.setMax(DELAY);
+        qViewModel.getProgressBar().setMax(DELAY);
     }
 
     //This method resets the values of the inactivity timer and the progress bar and restarts it with startInactivityTimer()
     private void resetInactivityTimer() {
         mHandler.removeCallbacks(mRunnable);
         qViewModel.setProgress(0);
-        progressBar.setProgress(0);
+        qViewModel.getProgressBar().setProgress(0);
         startInactivityTimer();
     }
 
@@ -189,6 +184,7 @@ public class QuizActivity extends AppCompatActivity {
         }
 
         qViewModel.setCounter(qViewModel.getCounter() + 1);
+        qViewModel.setIndex(-1);
     }
 
 
@@ -218,61 +214,69 @@ public class QuizActivity extends AppCompatActivity {
         qViewModel.getAllAnimals().observe(this,
                 animals -> {
                     int size = animals.size();
-                    qViewModel.setIndex(random.nextInt(size));
+                    if(qViewModel.getIndex() == -1) {
+                        qViewModel.setIndex(random.nextInt(size));
+                        //generating a random number for where the correct answer should be placed
+                        qViewModel.setCorrectnameplace(random.nextInt(3));
+                        //generating random numbers for selecting the wrong names from the database
+                        qViewModel.setOption1(random.nextInt(size));
+                        qViewModel.setOption2(random.nextInt(size));
+
+                        //The inactivity timer is reset after all the graphical stuff is done
+                        if (difficulty.equals("hard")) {
+                            resetInactivityTimer();
+                        }
+                    } 
                     Animal animal = Objects.requireNonNull(qViewModel.getAllAnimals().getValue()).get(qViewModel.getIndex());
 
                     //updating the imageView
                     imageView.setImageBitmap(BitmapFactory.decodeByteArray(animal.getBitmap(), 0, animal.getBitmap().length));
 
-                    //generating a random number for where the correct answer should be placed
-                    qViewModel.setCorrectnameplace(random.nextInt(3));
-                    //generating random numbers for selecting the wrong names from the database
-                    int option1 = random.nextInt(size);
-                    int option2 = random.nextInt(size);
+
 
             /*
             This logic is getting two random names from the database that are different to each other
             and different to the correct answer
              */
                     if (size > 2) {
-                        if (option1 == qViewModel.getIndex()) {
-                            if (option1 < size - 1) {
-                                option1++;
+                        if (qViewModel.getOption1() == qViewModel.getIndex()) {
+                            if (qViewModel.getOption1() < size - 1) {
+                                qViewModel.setOption1(qViewModel.getOption1() + 1);
                             } else {
-                                option1--;
+                                qViewModel.setOption1(qViewModel.getOption1() - 1);
                             }
 
                         }
-                        if (option2 == qViewModel.getIndex() || option2 == option1) {
-                            if (option2 < size - 2) {
-                                option2++;
-                                if (option2 == option1 || option2 == qViewModel.getIndex()) {
-                                    option2++;
+                        if (qViewModel.getOption2() == qViewModel.getIndex() ||qViewModel.getOption2() ==qViewModel.getOption1()) {
+                            if (qViewModel.getOption2() < size - 2) {
+                                qViewModel.setOption2(qViewModel.getOption2() + 1);
+                                if (qViewModel.getOption2() ==qViewModel.getOption1() ||qViewModel.getOption2() == qViewModel.getIndex()) {
+                                    qViewModel.setOption2(qViewModel.getOption2() + 1);
                                 }
-                            } else if (option2 > 1) {
-                                option2--;
-                                if (option2 == option1 || option2 == qViewModel.getIndex()) {
-                                    option2--;
+                            } else if (qViewModel.getOption2() > 1) {
+                                qViewModel.setOption2(qViewModel.getOption2() - 1);
+                                if (qViewModel.getOption2() ==qViewModel.getOption1() ||qViewModel.getOption2() == qViewModel.getIndex()) {
+                                    qViewModel.setOption2(qViewModel.getOption2() - 1);
                                 }
                             } else {
-                                if (qViewModel.getIndex() == 0 || option1 == 0) {
-                                    option2++;
+                                if (qViewModel.getIndex() == 0 ||qViewModel.getOption1() == 0) {
+                                   qViewModel.setOption2(qViewModel.getOption2() + 1);
                                 } else {
-                                    option2--;
+                                   qViewModel.setOption2(qViewModel.getOption2() - 1);
                                 }
                             }
                         }
                     } else if (size == 2) {
                         if (qViewModel.getIndex() == 1) {
-                            option1 = 0;
-                            option2 = 0;
+                           qViewModel.setOption1(0);
+                           qViewModel.setOption2(0);
                         } else {
-                            option1 = 1;
-                            option2 = 1;
+                            qViewModel.setOption1(1);
+                            qViewModel.setOption2(1);
                         }
                     } else if (size == 1) {
-                        option1 = 0;
-                        option2 = 0;
+                        qViewModel.setOption1(0);
+                        qViewModel.setOption2(0);
                     }
 
                         /*
@@ -284,21 +288,16 @@ public class QuizActivity extends AppCompatActivity {
                     qViewModel.setCorrectname(names.get(qViewModel.getIndex()));
                     if (qViewModel.getCorrectnameplace() == 0) {
                         button1.setText(qViewModel.getCorrectname());
-                        button2.setText(names.get(option1));
-                        button3.setText(names.get(option2));
+                        button2.setText(names.get(qViewModel.getOption1()));
+                        button3.setText(names.get(qViewModel.getOption2()));
                     } else if (qViewModel.getCorrectnameplace() == 1) {
-                        button1.setText(names.get(option1));
+                        button1.setText(names.get(qViewModel.getOption1()));
                         button2.setText(qViewModel.getCorrectname());
-                        button3.setText(names.get(option2));
+                        button3.setText(names.get(qViewModel.getOption2()));
                     } else {
-                        button1.setText(names.get(option1));
-                        button2.setText(names.get(option2));
+                        button1.setText(names.get(qViewModel.getOption1()));
+                        button2.setText(names.get(qViewModel.getOption2()));
                         button3.setText(qViewModel.getCorrectname());
-                    }
-
-                    //The inactivity timer is reset after all the graphical stuff is done
-                    if (difficulty.equals("hard")) {
-                        resetInactivityTimer();
                     }
                 });
 

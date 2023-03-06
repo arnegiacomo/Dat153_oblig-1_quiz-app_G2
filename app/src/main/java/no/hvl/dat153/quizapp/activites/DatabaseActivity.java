@@ -27,25 +27,26 @@ import no.hvl.dat153.quizapp.db.AnimalRepository;
 import no.hvl.dat153.quizapp.model.Animal;
 import no.hvl.dat153.quizapp.util.Util;
 import no.hvl.dat153.quizapp.view.AnimalAdapter;
+import no.hvl.dat153.quizapp.viewmodels.DatabaseViewModel;
 import no.hvl.dat153.quizapp.viewmodels.MainViewModel;
 import no.hvl.dat153.quizapp.viewmodels.QuizViewModel;
 
 public class DatabaseActivity extends AppCompatActivity {
 
     private AnimalAdapter animalAdapter;
-    private QuizViewModel quizViewModel;
+    public DatabaseViewModel databaseViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database);
 
-        quizViewModel = new ViewModelProvider(this).get(QuizViewModel.class);
+        databaseViewModel = new ViewModelProvider(this).get(DatabaseViewModel.class);
 
         AnimalRepository repository = new AnimalRepository(getApplication());
         animalAdapter = new AnimalAdapter(repository);
 
-        quizViewModel.getAllAnimals().observe(this,
+        databaseViewModel.getAllAnimals().observe(this,
                 animals -> {
                     animals.sort(Comparator.comparing(Animal::getName));
                     animalAdapter.setAnimals(animals);
@@ -59,7 +60,7 @@ public class DatabaseActivity extends AppCompatActivity {
         View deletebtn = findViewById(R.id.deletebtn);
         deletebtn.setOnClickListener(view -> {
             animalAdapter.updateAdapter();
-            quizViewModel.getAllAnimals().observe(this,
+            databaseViewModel.getAllAnimals().observe(this,
                     animals -> {
                         animalAdapter.setAnimals(animals);
                         animalAdapter.notifyDataSetChanged();
@@ -70,9 +71,7 @@ public class DatabaseActivity extends AppCompatActivity {
         addbtn.setOnClickListener(view -> Util.startActivity(this, AddEntryActivity.class));
 
         View sortbtn = findViewById(R.id.sort);
-        sortbtn.setOnClickListener(view -> {
-           sort();
-        });
+        sortbtn.setOnClickListener(view -> sort());
 
 
     }
