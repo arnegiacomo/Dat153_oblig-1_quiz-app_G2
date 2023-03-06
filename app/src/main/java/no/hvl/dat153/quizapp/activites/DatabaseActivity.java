@@ -3,6 +3,7 @@ package no.hvl.dat153.quizapp.activites;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,21 +27,25 @@ import no.hvl.dat153.quizapp.db.AnimalRepository;
 import no.hvl.dat153.quizapp.model.Animal;
 import no.hvl.dat153.quizapp.util.Util;
 import no.hvl.dat153.quizapp.view.AnimalAdapter;
+import no.hvl.dat153.quizapp.viewmodels.MainViewModel;
+import no.hvl.dat153.quizapp.viewmodels.QuizViewModel;
 
 public class DatabaseActivity extends AppCompatActivity {
 
     private AnimalAdapter animalAdapter;
-    private AnimalRepository repository;
+    private QuizViewModel quizViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_database);
 
-        repository = new AnimalRepository(getApplication());
+        quizViewModel = new ViewModelProvider(this).get(QuizViewModel.class);
+
+        AnimalRepository repository = new AnimalRepository(getApplication());
         animalAdapter = new AnimalAdapter(repository);
 
-        repository.getAllAnimals().observe(this,
+        quizViewModel.getAllAnimals().observe(this,
                 animals -> {
                     animals.sort(Comparator.comparing(Animal::getName));
                     animalAdapter.setAnimals(animals);
@@ -54,7 +59,7 @@ public class DatabaseActivity extends AppCompatActivity {
         View deletebtn = findViewById(R.id.deletebtn);
         deletebtn.setOnClickListener(view -> {
             animalAdapter.updateAdapter();
-            repository.getAllAnimals().observe(this,
+            quizViewModel.getAllAnimals().observe(this,
                     animals -> {
                         animalAdapter.setAnimals(animals);
                         animalAdapter.notifyDataSetChanged();
