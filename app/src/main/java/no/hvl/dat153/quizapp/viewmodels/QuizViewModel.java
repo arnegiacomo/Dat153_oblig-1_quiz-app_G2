@@ -17,11 +17,38 @@ public class QuizViewModel extends AndroidViewModel {
     private final AnimalRepository repository;
     private final LiveData<List<Animal>> allAnimals;
     private int correctnameplace;
-    private int index;
+    private int index = -1;
     private int counter;
     private int countercorrect;
     private String correctname;
     private int progress = 0;
+    private int option1;
+    private int option2;
+    private ProgressBar progressBar;
+
+    public ProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    public void setProgressBar(ProgressBar progressBar) {
+        this.progressBar = progressBar;
+    }
+
+    public int getOption1() {
+        return option1;
+    }
+
+    public void setOption1(int option1) {
+        this.option1 = option1;
+    }
+
+    public int getOption2() {
+        return option2;
+    }
+
+    public void setOption2(int option2) {
+        this.option2 = option2;
+    }
 
     public int getCorrectnameplace() {
         return correctnameplace;
