@@ -4,6 +4,7 @@ package no.hvl.dat153.quizapp;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
@@ -27,6 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import no.hvl.dat153.quizapp.activites.DatabaseActivity;
+import no.hvl.dat153.quizapp.activites.MainActivity;
 import no.hvl.dat153.quizapp.activites.QuizActivity;
 import no.hvl.dat153.quizapp.util.Util;
 
@@ -66,29 +68,51 @@ class MyIdlingResource implements IdlingResource {
 public class QuizActivityTest {
 
     private ActivityScenario<QuizActivity> QuizActivityScenario;
+    private ActivityScenario<MainActivity> mainScenario;
     private DatabaseActivity DatabaseActivity;
     private MyIdlingResource idlingResource;
 
-    @Before
-    public void setUp() {
-        Intent Quizintent = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), QuizActivity.class);
-        Quizintent.putExtra(Util.DIFFICULTY_MESSAGE, "easy");
-        QuizActivityScenario = ActivityScenario.launch(Quizintent);
 
-        idlingResource = new MyIdlingResource();
-        IdlingRegistry.getInstance().register(idlingResource);
+
+
+    @Test
+    public void testMainActivity() {
+
+        // Launch the main activity
+        mainScenario = ActivityScenario.launch(MainActivity.class);
+
+        // Wait for the main activity to start and the play quiz button to be displayed
+        onView(withId(R.id.playquiz)).check(matches(isDisplayed()));
+
+        // Perform click on the play quiz button
+        onView(withId(R.id.playquiz)).perform(click());
+
+        // Wait for the quiz activity to start and the first answer button to be displayed
+        onView(withId(R.id.button1)).check(matches(isDisplayed()));
+
+        // Perform click on the first answer button
+        onView(withId(R.id.button1)).perform(click());
+
+        mainScenario.close();
 
 
     }
 
 
-    @Rule
-    public ActivityScenarioRule<QuizActivity> QuizActivityRule = new ActivityScenarioRule<>(QuizActivity.class);
-    public ActivityScenarioRule<DatabaseActivity> DatabaseActivityRule = new ActivityScenarioRule<>(DatabaseActivity.class);
+
 
 
     @Test
     public void testQuizActivity() {
+
+        idlingResource = new MyIdlingResource();
+        IdlingRegistry.getInstance().register(idlingResource);
+
+        Intent Quizintent = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), QuizActivity.class);
+        Quizintent.putExtra(Util.DIFFICULTY_MESSAGE, "easy");
+
+        QuizActivityScenario = ActivityScenario.launch(Quizintent);
+
         QuizActivityScenario.onActivity(activity -> {
             // Perform long-running operation on background thread
             new Thread(() -> {
@@ -128,6 +152,8 @@ public class QuizActivityTest {
             // Set the IdlingResource to busy
             idlingResource.setIdle(false);
         });
+
+        QuizActivityScenario.close();
     }
 
 
@@ -136,7 +162,9 @@ public class QuizActivityTest {
 
     @After
     public void tearDown() {
-        QuizActivityScenario.close();
+
+
+
         IdlingRegistry.getInstance().unregister(idlingResource);
     }
 
