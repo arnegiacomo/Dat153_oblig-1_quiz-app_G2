@@ -49,8 +49,9 @@ public class AnimalAdapter extends RecyclerView.Adapter<AnimalAdapter.AnimalView
         holder.imageView.setImageBitmap(BitmapFactory.decodeByteArray(animal.getBitmap(), 0, animal.getBitmap().length));
 
         holder.markedForDelete.setOnClickListener(view -> animal.setMarked_for_delete(true));
-
+        if (animal.isMarked_for_delete()) holder.markedForDelete.setChecked(true);
         animalViewHolderList.add(holder);
+
     }
 
     /**

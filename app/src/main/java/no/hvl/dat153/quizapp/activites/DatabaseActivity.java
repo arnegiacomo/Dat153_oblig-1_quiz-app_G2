@@ -70,9 +70,7 @@ public class DatabaseActivity extends AppCompatActivity {
         addbtn.setOnClickListener(view -> Util.startActivity(this, AddEntryActivity.class));
 
         View sortbtn = findViewById(R.id.sort);
-        sortbtn.setOnClickListener(view -> {
-           sort();
-        });
+        sortbtn.setOnClickListener(view -> sort());
 
 
     }
