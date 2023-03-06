@@ -14,7 +14,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -96,9 +95,6 @@ public class QuizActivity extends AppCompatActivity {
 
         //Stop the Inactivity timer and the progress bar
         mHandler.removeCallbacks(mRunnable);
-        qViewModel.setProgress(0);
-        qViewModel.getProgressBar().setProgress(0);
-
     }
 
 
@@ -225,6 +221,11 @@ public class QuizActivity extends AppCompatActivity {
                         //generating random numbers for selecting the wrong names from the database
                         qViewModel.setOption1(random.nextInt(size));
                         qViewModel.setOption2(random.nextInt(size));
+
+                        //The inactivity timer is reset after all the graphical stuff is done
+                        if (difficulty.equals("hard")) {
+                            resetInactivityTimer();
+                        }
                     } 
                     Animal animal = Objects.requireNonNull(qViewModel.getAllAnimals().getValue()).get(qViewModel.getIndex());
 
@@ -297,11 +298,6 @@ public class QuizActivity extends AppCompatActivity {
                         button1.setText(names.get(qViewModel.getOption1()));
                         button2.setText(names.get(qViewModel.getOption2()));
                         button3.setText(qViewModel.getCorrectname());
-                    }
-
-                    //The inactivity timer is reset after all the graphical stuff is done
-                    if (difficulty.equals("hard")) {
-                        resetInactivityTimer();
                     }
                 });
 
