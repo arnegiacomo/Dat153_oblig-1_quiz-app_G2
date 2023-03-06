@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:id="@+id/linearLayout3"
-        android:layout_width="760dp"
+        android:layout_width="820dp"
         android:layout_height="430dp"
         android:layout_gravity="center"
         android:background="@drawable/background_gradient"
@@ -25,7 +25,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="80dp"
             app:srcCompat="@drawable/quizapp" />
 
         <Button
@@ -33,7 +33,7 @@
             android:layout_width="250dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/custom_button_start"
             android:text="Start quiz!"
             android:textAllCaps="true"
@@ -70,7 +70,7 @@
         android:id="@+id/difficultySwitch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:layout_marginEnd="20dp"
         android:gravity="center_vertical"
         android:text="Hard Mode"
