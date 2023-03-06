@@ -23,7 +23,7 @@ public class DatabaseViewModel extends AndroidViewModel {
     }
 
 
-    LiveData<List<Animal>> getAllAnimals() {
+    public LiveData<List<Animal>> getAllAnimals() {
         return allAnimals;
     }
 

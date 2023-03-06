@@ -37,7 +37,6 @@ public class QuizActivity extends AppCompatActivity {
 
     private QuizViewModel qViewModel;
 
-    private ProgressBar progressBar;
     private final int DELAY = 30000; //maximum time in hard mode
 
 
@@ -55,7 +54,7 @@ public class QuizActivity extends AppCompatActivity {
         if (intent.getStringExtra(Util.DIFFICULTY_MESSAGE) != null) {
             difficulty = intent.getStringExtra(Util.DIFFICULTY_MESSAGE);
         }
-        progressBar = findViewById(R.id.progressBar);
+        qViewModel.setProgressBar(findViewById(R.id.progressBar));
         update();
 
         //If the hard mode is active then the inactivity timer should start
@@ -98,7 +97,7 @@ public class QuizActivity extends AppCompatActivity {
         //Stop the Inactivity timer and the progress bar
         mHandler.removeCallbacks(mRunnable);
         qViewModel.setProgress(0);
-        progressBar.setProgress(0);
+        qViewModel.getProgressBar().setProgress(0);
 
     }
 
@@ -109,7 +108,7 @@ public class QuizActivity extends AppCompatActivity {
         public void run() {
             int progress = qViewModel.getProgress() + 100;
             qViewModel.setProgress(progress);
-            progressBar.setProgress(progress);
+            qViewModel.getProgressBar().setProgress(progress);
             if (progress < DELAY) {
                 mHandler.postDelayed(this, 100);
             } else {
@@ -125,14 +124,14 @@ public class QuizActivity extends AppCompatActivity {
     private void startInactivityTimer() {
         mHandler.removeCallbacks(mRunnable);
         mHandler.postDelayed(mRunnable, 100);
-        progressBar.setMax(DELAY);
+        qViewModel.getProgressBar().setMax(DELAY);
     }
 
     //This method resets the values of the inactivity timer and the progress bar and restarts it with startInactivityTimer()
     private void resetInactivityTimer() {
         mHandler.removeCallbacks(mRunnable);
         qViewModel.setProgress(0);
-        progressBar.setProgress(0);
+        qViewModel.getProgressBar().setProgress(0);
         startInactivityTimer();
     }
 
