@@ -1,6 +1,7 @@
 package no.hvl.dat153.quizapp.activites;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -23,6 +24,8 @@ import no.hvl.dat153.quizapp.R;
 import no.hvl.dat153.quizapp.db.AnimalDAO;
 import no.hvl.dat153.quizapp.db.AnimalRepository;
 import no.hvl.dat153.quizapp.model.Animal;
+import no.hvl.dat153.quizapp.viewmodels.AddEntryViewModel;
+import no.hvl.dat153.quizapp.viewmodels.QuizViewModel;
 
 public class AddEntryActivity extends AppCompatActivity {
 
@@ -30,14 +33,14 @@ public class AddEntryActivity extends AppCompatActivity {
     private String name;
     private ImageView image;
 
-    private AnimalRepository repository;
+    private AddEntryViewModel addEntryViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_entry);
 
-        repository = new AnimalRepository( getApplication());
+        addEntryViewModel = new ViewModelProvider(this).get(AddEntryViewModel.class);
 
         View gallerybtn = findViewById(R.id.gallery);
         gallerybtn.setOnClickListener(view -> pickImageFromGallery());
@@ -71,7 +74,7 @@ public class AddEntryActivity extends AppCompatActivity {
                 ByteArrayOutputStream stream1 = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream1);
                 byte[] byteArray = stream1.toByteArray();
-                repository.insertAnimal(new Animal(name, byteArray));
+                addEntryViewModel.insertAnimal(new Animal(name, byteArray));
             }).start();
             finish();
         });

@@ -1,7 +1,9 @@
 package no.hvl.dat153.quizapp.activites;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
@@ -19,22 +21,16 @@ import no.hvl.dat153.quizapp.db.AnimalDAO;
 import no.hvl.dat153.quizapp.db.AnimalRepository;
 import no.hvl.dat153.quizapp.model.Animal;
 import no.hvl.dat153.quizapp.util.Util;
+import no.hvl.dat153.quizapp.viewmodels.MainViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
     private String difficulty = "easy";
-    private AnimalRepository repository;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        repository = new AnimalRepository( getApplication());
-            repository.getAllAnimals().observe(this,
-                    animals -> {
-                        if(animals.size() < 3)
-                            addInitialEntries();
-                    });
 
         @SuppressLint("UseSwitchCompatOrMaterialCode") Switch difficultySwitch = findViewById(R.id.difficultySwitch);
         difficultySwitch.setOnCheckedChangeListener(this::setDifficulty);
@@ -47,7 +43,14 @@ public class MainActivity extends AppCompatActivity {
 
         Button add = findViewById(R.id.add);
         add.setOnClickListener(view -> Util.startActivity(MainActivity.this, AddEntryActivity.class));
+        mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
+        mViewModel.getAllAnimals().observe(this,
+                animals -> {
+                    if(animals.size() < 3)
+                        addInitialEntries();
+                });
     }
+    private MainViewModel mViewModel;
 
     /**
      * Set difficulty
@@ -66,19 +69,19 @@ public class MainActivity extends AppCompatActivity {
             ByteArrayOutputStream stream1 = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream1);
             byte[] byteArray = stream1.toByteArray();
-            repository.insertAnimal(new Animal("Cat", byteArray));
+            mViewModel.insertAnimal(new Animal("Cat", byteArray));
             bitmap = BitmapFactory.decodeResource(getResources(),
                     R.drawable.dog);
             stream1 = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream1);
             byteArray = stream1.toByteArray();
-            repository.insertAnimal(new Animal("Dog", byteArray));
+            mViewModel.insertAnimal(new Animal("Dog", byteArray));
             bitmap = BitmapFactory.decodeResource(getResources(),
                     R.drawable.anteater);
             stream1 = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream1);
             byteArray = stream1.toByteArray();
-            repository.insertAnimal(new Animal("Anteater", byteArray));
+            mViewModel.insertAnimal(new Animal("Anteater", byteArray));
     }
 
 }

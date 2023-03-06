@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,20 +32,16 @@ import no.hvl.dat153.quizapp.db.AnimalDAO;
 import no.hvl.dat153.quizapp.db.AnimalRepository;
 import no.hvl.dat153.quizapp.model.Animal;
 import no.hvl.dat153.quizapp.util.Util;
+import no.hvl.dat153.quizapp.viewmodels.MainViewModel;
+import no.hvl.dat153.quizapp.viewmodels.QuizViewModel;
 
 public class QuizActivity extends AppCompatActivity {
 
     private String difficulty = "easy";
 
-    private AnimalRepository repository;
+    private QuizViewModel qViewModel;
 
-    private int correctnameplace;
-    private int index;
-    private int counter;
-    private int countercorrect;
-    private String correctname;
     private ProgressBar progressBar;
-    private int progress = 0;
     private final int DELAY = 30000; //maximum time in hard mode
 
 
@@ -53,7 +50,7 @@ public class QuizActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        repository = new AnimalRepository( getApplication());
+        qViewModel = new ViewModelProvider(this).get(QuizViewModel.class);
 
         //Setups that has to be done when the activity is lauched
         Intent intent = getIntent();
@@ -115,12 +112,9 @@ public class QuizActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
 
-        //Finishing the activity
-        finish();
-
         //Stop the Inactivity timer and the progress bar
         mHandler.removeCallbacks(mRunnable);
-        progress = 0;
+        qViewModel.setProgress(0);
         progressBar.setProgress(0);
 
     }
@@ -130,7 +124,8 @@ public class QuizActivity extends AppCompatActivity {
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
-            progress += 100;
+            int progress = qViewModel.getProgress() + 100;
+            qViewModel.setProgress(progress);
             progressBar.setProgress(progress);
             if (progress < DELAY) {
                 mHandler.postDelayed(this, 100);
@@ -153,7 +148,7 @@ public class QuizActivity extends AppCompatActivity {
     //This method resets the values of the inactivity timer and the progress bar and restarts it with startInactivityTimer()
     private void resetInactivityTimer() {
         mHandler.removeCallbacks(mRunnable);
-        progress = 0;
+        qViewModel.setProgress(0);
         progressBar.setProgress(0);
         startInactivityTimer();
     }
@@ -177,7 +172,7 @@ public class QuizActivity extends AppCompatActivity {
             int colorFrom = Color.WHITE;
             int colorToCorrect = Color.GREEN;
             int colorToFalse = Color.RED;
-            if (correctnameplace==buttonnumber){
+            if (qViewModel.getCorrectnameplace()==buttonnumber){
                 ValueAnimator colorAnimationCorrect = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorToCorrect);
                 colorAnimationCorrect.setDuration(1000);
                 colorAnimationCorrect.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -222,15 +217,15 @@ public class QuizActivity extends AppCompatActivity {
             ImageView image = findViewById(R.id.imageViewQuiz);
 
             // Checking if button is correct und updating the counters for number of questions and correct answers
-            if (buttonnumber==correctnameplace){
-                countercorrect++;
+            if (buttonnumber==qViewModel.getCorrectnameplace()){
+                qViewModel.setCountercorrect(qViewModel.getCountercorrect() + 1);
                 image.startAnimation(correctAnimation);
             } else {
                 image.startAnimation(incorrectAnimation);
-                Toast.makeText(getApplicationContext(), "Correct answer was: "+correctname, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Correct answer was: "+qViewModel.getCorrectname(), Toast.LENGTH_SHORT).show();
             }
 
-            counter++;
+            qViewModel.setCounter(qViewModel.getCounter() + 1);
         }
 
 
@@ -251,22 +246,22 @@ public class QuizActivity extends AppCompatActivity {
             TextView textView = findViewById(R.id.textViewQuiz);
 
             //update the textView with the number of correct answers
-            textView.setText(countercorrect+" right answers out of "+counter+" questions");
+            textView.setText(qViewModel.getCountercorrect()+" right answers out of "+qViewModel.getCounter()+" questions");
 
             Random random = new Random();
 
             //choose a random animal who's picture is shown next
-            repository.getAllAnimals().observe(this,
+            qViewModel.getAllAnimals().observe(this,
                     animals -> {
                         int size = animals.size();
-                        index = random.nextInt(size);
-                        Animal animal = repository.getAllAnimals().getValue().get(index);
+                        qViewModel.setIndex(random.nextInt(size));
+                        Animal animal = qViewModel.getAllAnimals().getValue().get(qViewModel.getIndex());
 
                         //updating the imageView
                         imageView.setImageBitmap(BitmapFactory.decodeByteArray(animal.getBitmap(), 0, animal.getBitmap().length));
 
                         //generating a random number for where the correct answer should be placed
-                        correctnameplace = random.nextInt(3);
+                        qViewModel.setCorrectnameplace(random.nextInt(3));
                         //generating random numbers for selecting the wrong names from the database
                         int option1=random.nextInt(size);
                         int option2=random.nextInt(size);
@@ -276,16 +271,16 @@ public class QuizActivity extends AppCompatActivity {
             and different to the correct answer
              */
                         if (size>2){
-                            if(option1==index){
+                            if(option1==qViewModel.getIndex()){
                                 if (option1<size-1){option1++;}else{option1--;};
                             }
-                            if(option2==index||option2==option1){
-                                if (option2<size-2){option2++;if (option2==option1||option2==index){option2++;}}
-                                else if(option2>1){option2--;if (option2==option1||option2==index){option2--;}}
-                                else {if(index==0||option1==0){option2++;}else{option2--;}}
+                            if(option2==qViewModel.getIndex()||option2==option1){
+                                if (option2<size-2){option2++;if (option2==option1||option2==qViewModel.getIndex()){option2++;}}
+                                else if(option2>1){option2--;if (option2==option1||option2==qViewModel.getIndex()){option2--;}}
+                                else {if(qViewModel.getIndex()==0||option1==0){option2++;}else{option2--;}}
                             }
                         }else if(size==2){
-                            if (index==1){option1=0;option2=0;}
+                            if (qViewModel.getIndex()==1){option1=0;option2=0;}
                             else{option1=1;option2=1;}
                         }else if (size==1) {
                             option1=0;option2=0;
@@ -297,21 +292,21 @@ public class QuizActivity extends AppCompatActivity {
                          */
 
                         List<String> names = animals.stream().map(Animal::getName).collect(Collectors.toList());
-                        correctname=names.get(index);
-                        if (correctnameplace ==0){
-                            button1.setText(correctname);
+                        qViewModel.setCorrectname(names.get(qViewModel.getIndex()));
+                        if (qViewModel.getCorrectnameplace() ==0){
+                            button1.setText(qViewModel.getCorrectname());
                             button2.setText(names.get(option1));
                             button3.setText(names.get(option2));
                         }
-                        else if (correctnameplace ==1){
+                        else if (qViewModel.getCorrectnameplace() ==1){
                             button1.setText(names.get(option1));
-                            button2.setText(correctname);
+                            button2.setText(qViewModel.getCorrectname());
                             button3.setText(names.get(option2));
                         }
                         else{
                             button1.setText(names.get(option1));
                             button2.setText(names.get(option2));
-                            button3.setText(correctname);
+                            button3.setText(qViewModel.getCorrectname());
                         }
 
                         //The inactivity timer is reset after all the graphical stuff is done
@@ -326,12 +321,12 @@ public class QuizActivity extends AppCompatActivity {
 
 
         public int getCorrectButton(){
-            return correctnameplace;
+            return qViewModel.getCorrectnameplace();
         }
     public int getCounter(){
-        return counter;
+        return qViewModel.getCounter();
     }
     public int getCountercorrect(){
-        return countercorrect;
+        return qViewModel.getCountercorrect();
     }
 }
