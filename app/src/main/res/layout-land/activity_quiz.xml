@@ -8,76 +8,88 @@
     tools:context=".activites.QuizActivity">
 
     <LinearLayout
-        android:layout_width="760dp"
+        android:layout_width="800dp"
         android:layout_height="430dp"
-        android:orientation="vertical"
         android:background="@drawable/background_gradient_quiz"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5">
+        android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/imageViewQuiz"
-            android:layout_width="300dp"
-            android:layout_height="300dp"
+        <LinearLayout
+            android:layout_width="400dp"
+            android:layout_height="430dp"
+            android:orientation="vertical"
             android:layout_gravity="center"
-            android:layout_marginTop="-80dp"
-            app:srcCompat="@drawable/quizapp" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.517"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.526">
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            <ImageView
+                android:id="@+id/imageViewQuiz"
+                android:layout_width="300dp"
+                android:layout_height="300dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="40dp"
+                app:srcCompat="@drawable/quizapp" />
 
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center" /
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="330dp"
+            android:layout_height="430dp"
+            android:orientation="vertical">
         <Button
             android:id="@+id/button1"
             android:layout_width="250dp"
             android:layout_height="60dp"
-            android:text="alternative 1"
-            android:layout_marginTop="90dp"
             android:layout_gravity="center"
+            android:layout_marginTop="90dp"
+            android:background="@drawable/custom_button"
+            android:text="alternative 1"
             android:textAllCaps="true"
             android:textSize="20sp"
-            android:background="@drawable/custom_button"
-            app:backgroundTint="@null"/>
+            app:backgroundTint="@null" />
 
         <Button
             android:id="@+id/button2"
             android:layout_width="250dp"
             android:layout_height="60dp"
-            android:text="alternative 2"
-            android:layout_marginTop="10dp"
             android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/custom_button"
+            android:text="alternative 2"
             android:textAllCaps="true"
             android:textSize="20sp"
-            android:background="@drawable/custom_button"
-            app:backgroundTint="@null"/>
+            app:backgroundTint="@null" />
 
         <Button
             android:id="@+id/button3"
             android:layout_width="250dp"
             android:layout_height="60dp"
-            android:text="alternative 3"
-            android:layout_marginTop="10dp"
             android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/custom_button"
+            android:text="alternative 3"
             android:textAllCaps="true"
             android:textSize="20sp"
-            android:background="@drawable/custom_button"
-            app:backgroundTint="@null"/>
+            app:backgroundTint="@null" />
 
         <TextView
             android:id="@+id/textViewQuiz"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="20dp"
             android:text="TextView"
-            android:textColor="@color/white"
-            android:layout_gravity="center"/>
+            android:textColor="@color/white" />
+        </LinearLayout>
     </LinearLayout>
 
 
