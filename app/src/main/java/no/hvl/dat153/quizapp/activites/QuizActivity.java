@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.Animation;
@@ -33,7 +34,7 @@ import no.hvl.dat153.quizapp.util.Util;
 
 public class QuizActivity extends AppCompatActivity {
 
-    private String difficulty;
+    private String difficulty = "easy";
 
     private AnimalRepository repository;
 
@@ -56,7 +57,12 @@ public class QuizActivity extends AppCompatActivity {
 
         //Setups that has to be done when the activity is lauched
         Intent intent = getIntent();
-        difficulty = intent.getStringExtra(Util.DIFFICULTY_MESSAGE);
+
+        Log.d("ABC","what you get: "+intent.getStringExtra(Util.DIFFICULTY_MESSAGE));
+        if (intent.getStringExtra(Util.DIFFICULTY_MESSAGE) != null) {
+            difficulty = intent.getStringExtra(Util.DIFFICULTY_MESSAGE);
+        }
+
         counter=0;
         countercorrect=0;
         progressBar = findViewById(R.id.progressBar);
