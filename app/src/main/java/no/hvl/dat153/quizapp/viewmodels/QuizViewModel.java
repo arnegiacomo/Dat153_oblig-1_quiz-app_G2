@@ -23,6 +23,8 @@ public class QuizViewModel extends AndroidViewModel {
     private String correctname;
     private int progress = 0;
     private int option1;
+    private int option2;
+
 
     public int getOption1() {
         return option1;
@@ -39,8 +41,6 @@ public class QuizViewModel extends AndroidViewModel {
     public void setOption2(int option2) {
         this.option2 = option2;
     }
-
-    private int option2;
 
     public int getCorrectnameplace() {
         return correctnameplace;
