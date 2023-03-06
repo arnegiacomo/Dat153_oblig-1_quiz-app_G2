@@ -59,9 +59,6 @@ public class QuizActivity extends AppCompatActivity {
         if (intent.getStringExtra(Util.DIFFICULTY_MESSAGE) != null) {
             difficulty = intent.getStringExtra(Util.DIFFICULTY_MESSAGE);
         }
-
-        counter=0;
-        countercorrect=0;
         progressBar = findViewById(R.id.progressBar);
         update();
 
