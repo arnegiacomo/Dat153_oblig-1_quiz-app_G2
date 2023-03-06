@@ -24,7 +24,15 @@ public class QuizViewModel extends AndroidViewModel {
     private int progress = 0;
     private int option1;
     private int option2;
+    private ProgressBar progressBar;
 
+    public ProgressBar getProgressBar() {
+        return progressBar;
+    }
+
+    public void setProgressBar(ProgressBar progressBar) {
+        this.progressBar = progressBar;
+    }
 
     public int getOption1() {
         return option1;
