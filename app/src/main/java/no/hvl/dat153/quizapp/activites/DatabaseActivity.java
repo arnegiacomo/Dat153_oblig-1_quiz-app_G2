@@ -2,6 +2,7 @@ package no.hvl.dat153.quizapp.activites;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,6 +36,7 @@ public class DatabaseActivity extends AppCompatActivity {
 
     private AnimalAdapter animalAdapter;
     public DatabaseViewModel databaseViewModel;
+    public AnimalRepository repo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class DatabaseActivity extends AppCompatActivity {
         setContentView(R.layout.activity_database);
 
         databaseViewModel = new ViewModelProvider(this).get(DatabaseViewModel.class);
+        repo = new AnimalRepository(this.getApplication());
 
         AnimalRepository repository = new AnimalRepository(getApplication());
         animalAdapter = new AnimalAdapter(repository);
@@ -94,6 +97,10 @@ public class DatabaseActivity extends AppCompatActivity {
         }
         animalAdapter.setAnimals(animals);
         animalAdapter.notifyDataSetChanged();
+    }
+
+    public LiveData<List<Animal>> getAll() {
+        return databaseViewModel.getAllAnimals();
     }
 
 }

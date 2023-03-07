@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         mViewModel = new ViewModelProvider(this).get(MainViewModel.class);
         mViewModel.getAllAnimals().observe(this,
                 animals -> {
+//                    animals.forEach(animal -> mViewModel.deleteAnimal(animal));
                     if(animals.size() < 3)
                         addInitialEntries();
                 });

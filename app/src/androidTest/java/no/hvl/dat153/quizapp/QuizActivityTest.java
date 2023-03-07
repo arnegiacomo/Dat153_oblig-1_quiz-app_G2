@@ -4,6 +4,8 @@ package no.hvl.dat153.quizapp;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.intent.Intents.intending;
+import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
@@ -11,27 +13,30 @@ import static androidx.test.espresso.matcher.ViewMatchers.withText;
 
 import android.app.Activity;
 import android.app.Instrumentation;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.espresso.IdlingRegistry;
 import androidx.test.espresso.IdlingResource;
-import androidx.test.ext.junit.rules.ActivityScenarioRule;
+import androidx.test.espresso.intent.Intents;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 import no.hvl.dat153.quizapp.activites.DatabaseActivity;
 import no.hvl.dat153.quizapp.activites.MainActivity;
 import no.hvl.dat153.quizapp.activites.QuizActivity;
 import no.hvl.dat153.quizapp.util.Util;
-
 
 
 class MyIdlingResource implements IdlingResource {
@@ -69,10 +74,15 @@ public class QuizActivityTest {
 
     private ActivityScenario<QuizActivity> QuizActivityScenario;
     private ActivityScenario<MainActivity> mainScenario;
-    private DatabaseActivity DatabaseActivity;
+    private ActivityScenario<DatabaseActivity> DatabaseScenario;
     private MyIdlingResource idlingResource;
 
 
+    @Before
+    public void SetUp() {
+
+        Intents.init();
+    }
 
 
     @Test
@@ -156,6 +166,57 @@ public class QuizActivityTest {
         QuizActivityScenario.close();
     }
 
+
+    @Test
+    public void testDatabase() {
+
+
+
+        DatabaseScenario = DatabaseScenario.launch(DatabaseActivity.class);
+        AtomicInteger initialCount = new AtomicInteger(-1);
+        int num = 0;
+        DatabaseScenario.onActivity(activity -> {
+
+            activity.getAll().observe(() -> activity.getLifecycle(), animals -> initialCount.set(animals.size()));
+
+                });
+
+        while (initialCount.get() == -1) {
+            ; // do nothing
+        }
+
+        num = initialCount.get();
+        // Add an entry with an image
+        Context context = InstrumentationRegistry.getInstrumentation().getTargetContext();
+        Resources resources = context.getResources();
+        int resID = resources.getIdentifier("sample", "drawable", context.getPackageName());
+        Uri imageUri = Uri.parse("android.resource://" + context.getPackageName() + "/" + resID);
+        Intent dbintent = new Intent();
+
+        System.out.println(imageUri);
+        dbintent.setData(imageUri);
+        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, dbintent);
+        intending(hasAction(Intent.ACTION_PICK)).respondWith(result);
+        onView(withId(R.id.addbtn)).perform(click());
+        onView(withId(R.id.gallery)).perform(click());
+        onView(withId(R.id.addentrybtn)).perform(click());
+
+        AtomicInteger afterCount = new AtomicInteger(-1);
+        DatabaseScenario.onActivity(activity -> {
+
+            activity.getAll().observe(() -> activity.getLifecycle(), animals -> afterCount.set(animals.size()));
+
+        });
+
+        while (afterCount.get() == -1) {
+            ; // do nothing
+        }
+
+        Assert.assertEquals(num +1, afterCount.get());
+
+        DatabaseScenario.close();
+
+    }
 
 
 
