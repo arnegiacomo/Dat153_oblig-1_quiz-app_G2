@@ -30,7 +30,7 @@ import no.hvl.dat153.quizapp.viewmodels.QuizViewModel;
 public class AddEntryActivity extends AppCompatActivity {
 
     private Bitmap bitmap;
-    private String name;
+    private String name = "";
     private ImageView image;
 
     private AddEntryViewModel addEntryViewModel;
