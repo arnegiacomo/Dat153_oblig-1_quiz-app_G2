@@ -28,8 +28,11 @@ import androidx.test.platform.app.InstrumentationRegistry;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -69,20 +72,13 @@ class MyIdlingResource implements IdlingResource {
 
 
 @RunWith(AndroidJUnit4.class)
-
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class QuizActivityTest {
 
     private ActivityScenario<QuizActivity> QuizActivityScenario;
     private ActivityScenario<MainActivity> mainScenario;
     private ActivityScenario<DatabaseActivity> DatabaseScenario;
     private MyIdlingResource idlingResource;
-
-
-    @Before
-    public void SetUp() {
-
-        Intents.init();
-    }
 
 
     @Test
@@ -169,7 +165,7 @@ public class QuizActivityTest {
 
     @Test
     public void testDatabase() {
-
+        Intents.init();
 
 
         DatabaseScenario = DatabaseScenario.launch(DatabaseActivity.class);
