@@ -27,8 +27,6 @@ import androidx.test.platform.app.InstrumentationRegistry;
 
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,7 +71,7 @@ class MyIdlingResource implements IdlingResource {
 
 @RunWith(AndroidJUnit4.class)
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class QuizActivityTest {
+public class Tests {
 
     private ActivityScenario<QuizActivity> QuizActivityScenario;
     private ActivityScenario<MainActivity> mainScenario;
