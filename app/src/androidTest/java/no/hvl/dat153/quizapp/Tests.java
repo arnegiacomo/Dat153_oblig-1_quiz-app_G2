@@ -70,7 +70,7 @@ class MyIdlingResource implements IdlingResource {
 
 
 @RunWith(AndroidJUnit4.class)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+// @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class Tests {
 
     private ActivityScenario<QuizActivity> QuizActivityScenario;
@@ -109,53 +109,62 @@ public class Tests {
     @Test
     public void testQuizActivity() {
 
-        idlingResource = new MyIdlingResource();
-        IdlingRegistry.getInstance().register(idlingResource);
+//        idlingResource = new MyIdlingResource();
+//        IdlingRegistry.getInstance().register(idlingResource);
 
         Intent Quizintent = new Intent(InstrumentationRegistry.getInstrumentation().getTargetContext(), QuizActivity.class);
         Quizintent.putExtra(Util.DIFFICULTY_MESSAGE, "easy");
 
         QuizActivityScenario = ActivityScenario.launch(Quizintent);
 
+        final int[] correctnamebutton = new int[1];
+        final int[] counter = new int[1];
+        final int[] countercorrect = new int[1];
         QuizActivityScenario.onActivity(activity -> {
             // Perform long-running operation on background thread
-            new Thread(() -> {
-                int correctnamebutton = activity.getCorrectButton();
-                int counter = activity.getCounter();
-                int countercorrect = activity.getCountercorrect();
-
-                if (correctnamebutton == 0) {
+//            new Thread(() -> {
+            correctnamebutton[0] = activity.getCorrectButton();
+            counter[0] = activity.getCounter();
+            countercorrect[0] = activity.getCountercorrect();
+        });
+                if (correctnamebutton[0] == 0) {
                     onView(withId(R.id.button1)).perform(click());
-                } else if (correctnamebutton == 1) {
+                } else if (correctnamebutton[0] == 1) {
                     onView(withId(R.id.button2)).perform(click());
                 } else {
                     onView(withId(R.id.button3)).perform(click());
                 }
 
-                counter++;
-                countercorrect++;
-                onView(withId(R.id.textViewQuiz)).check(matches(withText(countercorrect + " right answers out of " + counter + " questions")));
+                counter[0]++;
+                countercorrect[0]++;
+                onView(withId(R.id.textViewQuiz)).check(matches(withText(countercorrect[0] + " right answers out of " + counter[0] + " questions")));
 
-                correctnamebutton = activity.getCorrectButton();
+        QuizActivityScenario.onActivity(activity -> {
+            // Perform long-running operation on background thread
+//            new Thread(() -> {
+            correctnamebutton[0] = activity.getCorrectButton();
+            counter[0] = activity.getCounter();
+            countercorrect[0] = activity.getCountercorrect();
+        });
 
-                if (correctnamebutton == 0) {
+                if (correctnamebutton[0] == 0) {
                     onView(withId(R.id.button2)).perform(click());
-                } else if (correctnamebutton == 1) {
+                } else if (correctnamebutton[0] == 1) {
                     onView(withId(R.id.button3)).perform(click());
                 } else {
                     onView(withId(R.id.button1)).perform(click());
                 }
 
-                counter++;
-                onView(withId(R.id.textViewQuiz)).check(matches(withText(countercorrect + " right answers out of " + counter + " questions")));
+                counter[0]++;
+                onView(withId(R.id.textViewQuiz)).check(matches(withText(countercorrect[0] + " right answers out of " + counter[0] + " questions")));
 
                 // Set the IdlingResource to idle
-                idlingResource.setIdle(true);
-            }).start();
+//                idlingResource.setIdle(true);
+//            }).start();
 
             // Set the IdlingResource to busy
-            idlingResource.setIdle(false);
-        });
+//            idlingResource.setIdle(false);
+//        });
 
         QuizActivityScenario.close();
     }
